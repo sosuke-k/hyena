@@ -1,6 +1,7 @@
-app = Application('Google Chrome');
+#!/usr/bin/env osascript -l JavaScript
 
 function chrome_get_tab_info(){
+    app = Application('Google Chrome');
     windows = app.windows();
     var res = {};
 
@@ -15,4 +16,32 @@ function chrome_get_tab_info(){
     return s;
 }
 
-chrome_get_tab_info();
+
+function fileWriter(pathAsString) {
+    'use strict';
+
+    var app = Application.currentApplication();
+    app.includeStandardAdditions = true;
+    var path = Path(pathAsString);
+    var file = app.openForAccess(path, {writePermission: true});
+
+    /* reset file length */
+    app.setEof(file, {to: 0});
+
+    return {
+        write: function(content) {
+            app.write(content, {to: file, as: 'text'});
+        },
+        close: function() {
+            app.closeAccess(file);
+        }
+    };
+}
+
+function run(argv){
+    app = Application('Google Chrome');
+    var data = chrome_get_tab_info();
+    var exportFileWriter = fileWriter(argv);
+    exportFileWriter.write(data);
+    exportFileWriter.close();
+}

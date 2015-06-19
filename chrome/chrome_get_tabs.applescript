@@ -46,7 +46,6 @@ function fileWriter(pathAsString) {
 }
 
 function run(argv) {
-    app = Application('Google Chrome');
     var data = chrome_get_tab_info();
     var exportFileWriter = fileWriter(argv);
     exportFileWriter.write(data);

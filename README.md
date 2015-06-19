@@ -15,16 +15,15 @@ go get github.com/sosuke-k/hyena ???
 
 ```
 
-Usage: 
+Usage:
   hyena [command]
 
-Available Commands: 
+Available Commands:
   ls                                            List all projects
   load [project id]                             Load item
   save [project id]                             Save item
-  version                                       Print hyena tools version
   help [command]                                Help about any command
-  
+
 
 Use "hyena help [command]" for more information about that command.
 ```

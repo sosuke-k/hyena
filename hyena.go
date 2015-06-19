@@ -16,41 +16,45 @@ import (
 )
 
 var projects = []string{}
-var hyena_path string
-var config_path string
+var hyenaPath string //e.g. 'Users/name/.config/hyena'
+var configPath string //e.g. 'Users/name/.config/hyena/config.json'
+var srcDir string //e.g. 'Users/name/go/~~~'
 
-var tasks = []string{"ls", "clean", "laundry", "eat", "sleep", "code"}
-
-func checkError( err ) {
-  if e != nil {
-    panic(e)
+func validError(errs ...error) error {
+  for i, _ := range errs {
+    if errs[i] != nil {
+      return errs[i]
+    }
   }
+  return nil
 }
 
 func init() {
-  hyena_path = os.Getenv("HYENA_DIR_PATH")
-  if hyena_path == "" {
+  hyenaPath = os.Getenv("HYENA_DIR_PATH")
+  if hyenaPath == "" {
     usr, err := user.Current()
     if err != nil {
       log.Fatal(err)
     }
-    hyena_path = path.Join(usr.HomeDir, ".config/hyena")
+    hyenaPath = path.Join(usr.HomeDir, ".config/hyena")
   }
-  config_path = path.Join(hyena_path, "config.json")
+  configPath = path.Join(hyenaPath, "config.json")
+
+  // initialize srcDir
 }
 
 func createConfig() {
-  println(config_path)
-  if err := os.MkdirAll(hyena_path, 0777); err != nil {
+  println(configPath)
+  if err := os.MkdirAll(hyenaPath, 0777); err != nil {
     println(err)
   }
   js := simplejson.New()
   js.Set("length", 0)
   js.Set("projects", simplejson.New())
-  w, err := os.Create(config_path)
+  w, err := os.Create(configPath)
   if err != nil {
     log.Fatal(err)
-    log.Fatal(config_path)
+    log.Fatal(configPath)
   }
   defer w.Close()
   o, _ := js.EncodePretty()
@@ -59,13 +63,13 @@ func createConfig() {
 
 func loadConfig() (js simplejson.Json) {
 
-  r, err := os.Open(config_path)
+  r, err := os.Open(configPath)
   if err != nil {
-    log.Fatal(config_path + " is not found")
+    log.Fatal(configPath + " is not found")
   } else {
     js, err := simplejson.NewFromReader(r)
     if err != nil {
-      log.Fatal("cannot read " + config_path)
+      log.Fatal("cannot read " + configPath)
     } else {
       length, _ := js.Get("length").Int()
       for i := 0; i < length; i++ {
@@ -77,49 +81,22 @@ func loadConfig() (js simplejson.Json) {
   return
 }
 
-func load() {
-  // sh.Command("echo", "hello\tworld").Command("cut", "-f2").Run()
-  // sh.Command("cd ~/go/src/example/").Run()
-  // sh.Dir("~/go/src/example/").Run()
-  // sh.Command("pwd", sh.Dir(os.Getenv("HOME") + "/go/src/example/")).Run()
-  // sh.Command("cd /;ls -al").Run()
-  session := sh.NewSession()
-  var sessionOut bytes.Buffer
-  session.Stdout = &sessionOut
-  // session.SetEnv("BUILD_ID", "123")
-  session.SetDir("/Users/katososuke/Documents/COMPUTER_SCIENCE/DATABASES/INFORMATION_RETRIEVAL/IIR/")
-  // # then call cmd
-  // session.Command("echo", "hello").Run()
-  session.Command("ls").Run()
-  // session.Command("open", "./FnTIR-Press-Kelly.pdf").Run()
-  // applescript := "display dialog 'test'"
-  session.Command("osascript", "/Users/katososuke/go/src/example/greet/sample.scpt").Run()
-  println(sessionOut.String())
-  // session.Command("/Applications/Preview.app/Contents/MacOS/Preview", "/Users/katososuke/Documents/COMPUTER_SCIENCE/DATABASES/INFORMATION_RETRIEVAL/IIR/FnTIR-Press-Kelly.pdf").Run()
-  // # set ShowCMD to true for easily debug
-  // session.ShowCmd = true
-
-
+func save(projectName string) {
+  // session := sh.NewSession()
+  // var sessionOut bytes.Buffer
   // session.Stdout = &sessionOut
-  // w, err := os.Create(configpath)
-  // defer w.Close()
-  // // o, _ := js.MarshalJSON()
-  // // o, _ := js.Encode()
-  // o, _ := js.EncodePretty()
-  // w.Write(o)
-
-
-  // exec.Command("cd", "/Users/katososuke/Documents/COMPUTER_SCIENCE/DATABASES/INFORMATION_RETRIEVAL/IIR/").Run()
-  // cmd := exec.Command("ls", "-al")
-  // var out bytes.Buffer
-  // cmd.Stdout = &out
-  // cmd_err := cmd.Run()
-  // if cmd_err != nil {
-  // 	log.Fatal(cmd_err)
-  // }
   //
-  // println(out.String())
-  // exec.Command("open", "-a Preview", "./FnTIR-Press-Kelly.pdf").Run()
+  // chromeSrcDir := path.Join(srcDir, "chrome")
+  // session.SetDir(chromeSrcDir)
+  // session.Command("osascript", "-l JavaScript", "chrome_store_tabs.applescript").Run()
+  //
+  // println(sessionOut.String())
+
+  println("still not implemented")
+}
+
+func load() {
+
 }
 
 func main() {
@@ -138,7 +115,7 @@ func main() {
       Aliases:     []string{"i"},
       Usage:     "initialize hyena",
       Action: func(c *cli.Context) {
-        println("Do you create " + config_path + " ? y/[n]")
+        println("Do you create " + configPath + " ? y/[n]")
 
         scanner := bufio.NewScanner(os.Stdin)
         scanner.Scan()
@@ -184,10 +161,10 @@ func main() {
         	}
           js.Set("length", len(projects))
           js.Set("projects", projectJson)
-          w, err := os.Create(config_path)
+          w, err := os.Create(configPath)
           if err != nil {
             log.Fatal(err)
-            log.Fatal(config_path)
+            log.Fatal(configPath)
           }
           defer w.Close()
           o, _ := js.EncodePretty()
@@ -196,6 +173,20 @@ func main() {
         }
       },
     }, // end add action definition
+    {
+      Name:      "save",
+      Aliases:     []string{"s"},
+      Usage:     "save the project",
+      Action: func(c *cli.Context) {
+        loadConfig()
+        name := c.Args().First()
+        if name == "" {
+          println("please input project name")
+        } else {
+          save(name)
+        }
+      },
+    }, // end save action definition
   }
 
   app.Run(os.Args)

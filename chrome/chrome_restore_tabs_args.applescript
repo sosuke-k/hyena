@@ -2,7 +2,7 @@
 
 function chrome_restore_tabs(json_string) {
     app = Application('Google Chrome');
-    var data = JSON.parse(json_string);
+	var data = JSON.parse(json_string);
     var n_windows = Object.keys(data).length;
 
     for (i = 0; i < n_windows; i++) { // i: window_id
@@ -21,6 +21,34 @@ function chrome_restore_tabs(json_string) {
     return;
 }
 
+
+function fileReader(pathAsString) {
+    'use strict';
+
+    var app = Application.currentApplication();
+    app.includeStandardAdditions = true;
+    var path = Path(pathAsString);
+    var file = app.openForAccess(path);
+
+	var eof = app.getEof(file);
+
+	return {
+        read: function() {
+            return app.read(file, {
+				to: eof
+			});
+        },
+        close: function() {
+            app.closeAccess(file);
+        }
+    };
+}
+
+
 function run(argv) {
-    chrome_restore_tabs(argv);
+	var reader = fileReader(argv);
+	var data = reader.read();
+	reader.close();
+
+	chrome_restore_tabs(data);
 }

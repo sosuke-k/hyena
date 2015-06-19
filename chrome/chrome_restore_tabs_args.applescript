@@ -2,7 +2,7 @@
 
 function chrome_restore_tabs(json_string) {
     app = Application('Google Chrome');
-	var data = JSON.parse(json_string);
+    var data = JSON.parse(json_string);
     var n_windows = Object.keys(data).length;
 
     for (i = 0; i < n_windows; i++) { // i: window_id
@@ -30,13 +30,13 @@ function fileReader(pathAsString) {
     var path = Path(pathAsString);
     var file = app.openForAccess(path);
 
-	var eof = app.getEof(file);
+    var eof = app.getEof(file);
 
-	return {
+    return {
         read: function() {
             return app.read(file, {
-				to: eof
-			});
+                to: eof
+            });
         },
         close: function() {
             app.closeAccess(file);
@@ -46,9 +46,9 @@ function fileReader(pathAsString) {
 
 
 function run(argv) {
-	var reader = fileReader(argv);
-	var data = reader.read();
-	reader.close();
+    var reader = fileReader(argv);
+    var data = reader.read();
+    reader.close();
 
-	chrome_restore_tabs(data);
+    chrome_restore_tabs(data);
 }

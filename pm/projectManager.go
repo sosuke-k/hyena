@@ -3,16 +3,16 @@ package pm
 import (
   "os"
   "path"
+  "path/filepath"
   "strconv"
   "log"
   "github.com/bitly/go-simplejson"
 )
 
 func Init(configPath string) {
-  println(configPath)
-  hyenaPath := path.Dir(configPath)
+  hyenaPath := filepath.Dir(configPath)
   if err := os.MkdirAll(hyenaPath, 0777); err != nil {
-    println(err)
+    log.Fatal(err)
   }
   js := simplejson.New()
   js.Set("length", 0)
@@ -66,4 +66,10 @@ func Add(configPath string, newProject string) {
   defer w.Close()
   o, _ := js.EncodePretty()
   w.Write(o)
+
+  hyenaPath := filepath.Dir(configPath)
+  projectDir := path.Join(hyenaPath, newProject)
+  if err := os.MkdirAll(projectDir, 0777); err != nil {
+    log.Fatal(err)
+  }
 }

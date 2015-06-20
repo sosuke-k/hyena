@@ -113,7 +113,6 @@ func main() {
       Aliases:     []string{"s"},
       Usage:     "save the project",
       Action: func(c *cli.Context) {
-        projects = pm.Load(configPath)
         name := c.Args().First()
         if name == "" {
           println("please input project name")
@@ -122,6 +121,19 @@ func main() {
         }
       },
     }, // end save action definition
+    {
+      Name:      "restore",
+      Aliases:     []string{"r"},
+      Usage:     "restore the project",
+      Action: func(c *cli.Context) {
+        name := c.Args().First()
+        if name == "" {
+          println("please input project name")
+        } else {
+          restore(name)
+        }
+      },
+    }, // end restore action definition
   }
 
   app.Run(os.Args)

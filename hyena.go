@@ -3,19 +3,16 @@ package main
 import (
   "os"
   "os/user"
-  // "os/exec"
 	"path"
-  "path/filepath"
   "bufio"
   // "fmt"
-  // "strconv"
   "log"
   // "bytes"
   "github.com/codegangsta/cli"
-  // "github.com/bitly/go-simplejson"
   // "github.com/codeskyblue/go-sh"
   // "github.com/kardianos/osext"
   "github.com/sosuke-k/hyena/pm"
+  "github.com/sosuke-k/hyena/chrome"
 )
 
 var projects = []string{}
@@ -42,26 +39,16 @@ func init() {
     hyenaPath = path.Join(usr.HomeDir, ".config/hyena")
   }
   configPath = path.Join(hyenaPath, "config.json")
-
-  srcDir, err := filepath.Abs(filepath.Dir(os.Args[0]))
-  if err != nil {
-    log.Fatal(err)
-  }
-  _ = srcDir
 }
 
 func save(projectName string) {
-  // session := sh.NewSession()
-  // var sessionOut bytes.Buffer
-  // session.Stdout = &sessionOut
-  //
-  // chromeSrcDir := path.Join(srcDir, "chrome")
-  // session.SetDir(chromeSrcDir)
-  // session.Command("osascript", "-l JavaScript", "chrome_store_tabs.applescript").Run()
-  //
-  // println(sessionOut.String())
+  projectPath := path.Join(hyenaPath, projectName)
+  chrome.Save(path.Join(projectPath, "chrome.json"))
+}
 
-  println("still not implemented")
+func restore(projectName string) {
+  projectPath := path.Join(hyenaPath, projectName)
+  chrome.Restore(path.Join(projectPath, "chrome.json"))
 }
 
 func main() {
@@ -71,7 +58,7 @@ func main() {
   app.Usage = "see help"
   app.Action = func(c *cli.Context) {
     println("This is the tool like hyena...")
-    println("to get ore info, command 'hyena help'")
+    println("to get more info, command 'hyena help'")
   }
 
   app.Commands = []cli.Command{
@@ -126,7 +113,6 @@ func main() {
       Aliases:     []string{"s"},
       Usage:     "save the project",
       Action: func(c *cli.Context) {
-        projects = pm.Load(configPath)
         name := c.Args().First()
         if name == "" {
           println("please input project name")
@@ -135,6 +121,19 @@ func main() {
         }
       },
     }, // end save action definition
+    {
+      Name:      "restore",
+      Aliases:     []string{"r"},
+      Usage:     "restore the project",
+      Action: func(c *cli.Context) {
+        name := c.Args().First()
+        if name == "" {
+          println("please input project name")
+        } else {
+          restore(name)
+        }
+      },
+    }, // end restore action definition
   }
 
   app.Run(os.Args)

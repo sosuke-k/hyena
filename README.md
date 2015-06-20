@@ -5,7 +5,9 @@
 ## インストール
 
 ```
-go get github.com/sosuke-k/hyena ???
+go get github.com/sosuke-k/hyena
+cd $GOPATH/src/github.com/sosuke-k/hyena
+go install
 ```
 
 
@@ -20,8 +22,8 @@ Usage:
 
 Available Commands:
   ls                                            List all projects
-  load [project id]                             Load item
-  save [project id]                             Save item
+  save [project id]                             Save project
+  restore [project id]                          Restore project
   help [command]                                Help about any command
 
 

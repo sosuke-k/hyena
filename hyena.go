@@ -13,6 +13,7 @@ import (
   // "github.com/kardianos/osext"
   "github.com/sosuke-k/hyena/pm"
   "github.com/sosuke-k/hyena/chrome"
+  "github.com/sosuke-k/hyena/acrobat"
 )
 
 var projects = []string{}
@@ -44,11 +45,13 @@ func init() {
 func save(projectName string) {
   projectPath := path.Join(hyenaPath, projectName)
   chrome.Save(path.Join(projectPath, "chrome.json"))
+  acrobat.Save(path.Join(projectPath, "acrobat.json"))
 }
 
 func restore(projectName string) {
   projectPath := path.Join(hyenaPath, projectName)
   chrome.Restore(path.Join(projectPath, "chrome.json"))
+  acrobat.Restore(path.Join(projectPath, "acrobat.json"))
 }
 
 func main() {

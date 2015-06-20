@@ -8,13 +8,14 @@ import (
   "path/filepath"
   "bufio"
   // "fmt"
-  "strconv"
+  // "strconv"
   "log"
   // "bytes"
   "github.com/codegangsta/cli"
-  "github.com/bitly/go-simplejson"
+  // "github.com/bitly/go-simplejson"
   // "github.com/codeskyblue/go-sh"
   // "github.com/kardianos/osext"
+  "github.com/sosuke-k/hyena/pm"
 )
 
 var projects = []string{}
@@ -45,47 +46,8 @@ func init() {
   srcDir, err := filepath.Abs(filepath.Dir(os.Args[0]))
   if err != nil {
     log.Fatal(err)
-  } else {
-    println(srcDir)
   }
-}
-
-func createConfig() {
-  println(configPath)
-  if err := os.MkdirAll(hyenaPath, 0777); err != nil {
-    println(err)
-  }
-  js := simplejson.New()
-  js.Set("length", 0)
-  js.Set("projects", simplejson.New())
-  w, err := os.Create(configPath)
-  if err != nil {
-    log.Fatal(err)
-    log.Fatal(configPath)
-  }
-  defer w.Close()
-  o, _ := js.EncodePretty()
-  w.Write(o)
-}
-
-func loadConfig() (js simplejson.Json) {
-
-  r, err := os.Open(configPath)
-  if err != nil {
-    log.Fatal(configPath + " is not found")
-  } else {
-    js, err := simplejson.NewFromReader(r)
-    if err != nil {
-      log.Fatal("cannot read " + configPath)
-    } else {
-      length, _ := js.Get("length").Int()
-      for i := 0; i < length; i++ {
-        project, _ := js.Get("projects").Get(strconv.Itoa(i)).String()
-        projects = append(projects, project)
-      }
-    }
-  }
-  return
+  _ = srcDir
 }
 
 func save(projectName string) {
@@ -100,10 +62,6 @@ func save(projectName string) {
   // println(sessionOut.String())
 
   println("still not implemented")
-}
-
-func load() {
-
 }
 
 func main() {
@@ -131,7 +89,7 @@ func main() {
         }
         a := scanner.Text()
         if a == "y" {
-          createConfig()
+          pm.Init(configPath)
           println("config file was created")
         } else {
           println("please input y")
@@ -143,7 +101,7 @@ func main() {
       Aliases:     []string{"l"},
       Usage:     "show the list",
       Action: func(c *cli.Context) {
-        loadConfig()
+        projects = pm.Load(configPath)
         for _, v := range projects {
           println(v)
         }
@@ -154,28 +112,11 @@ func main() {
       Aliases:     []string{"a"},
       Usage:     "add the project",
       Action: func(c *cli.Context) {
-        loadConfig()
         name := c.Args().First()
         if name == "" {
           println("please input project name")
         } else {
-          projects = append(projects, name)
-          js := simplejson.New()
-          projectJson := simplejson.New()
-
-          for i, v := range projects {
-            projectJson.Set(strconv.Itoa(i), v)
-        	}
-          js.Set("length", len(projects))
-          js.Set("projects", projectJson)
-          w, err := os.Create(configPath)
-          if err != nil {
-            log.Fatal(err)
-            log.Fatal(configPath)
-          }
-          defer w.Close()
-          o, _ := js.EncodePretty()
-          w.Write(o)
+          pm.Add(configPath, name)
           println("created new project named " + name)
         }
       },
@@ -185,7 +126,7 @@ func main() {
       Aliases:     []string{"s"},
       Usage:     "save the project",
       Action: func(c *cli.Context) {
-        loadConfig()
+        projects = pm.Load(configPath)
         name := c.Args().First()
         if name == "" {
           println("please input project name")

@@ -58,7 +58,7 @@ func main() {
   app.Usage = "see help"
   app.Action = func(c *cli.Context) {
     println("This is the tool like hyena...")
-    println("to get ore info, command 'hyena help'")
+    println("to get more info, command 'hyena help'")
   }
 
   app.Commands = []cli.Command{

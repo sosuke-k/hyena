@@ -22,8 +22,9 @@ Usage:
 
 Available Commands:
   ls                                            List all projects
-  save [project id]                             Save project
-  restore [project id]                          Restore project
+  add [project name]                            Add project to list
+  save [project name]                           Save project
+  restore [project name]                        Restore project
   help [command]                                Help about any command
 
 

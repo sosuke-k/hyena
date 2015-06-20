@@ -5,14 +5,16 @@ import (
   "os/user"
   // "os/exec"
 	"path"
+  "path/filepath"
   "bufio"
   // "fmt"
   "strconv"
   "log"
-  "bytes"
+  // "bytes"
   "github.com/codegangsta/cli"
   "github.com/bitly/go-simplejson"
-  "github.com/codeskyblue/go-sh"
+  // "github.com/codeskyblue/go-sh"
+  // "github.com/kardianos/osext"
 )
 
 var projects = []string{}
@@ -40,7 +42,12 @@ func init() {
   }
   configPath = path.Join(hyenaPath, "config.json")
 
-  // initialize srcDir
+  srcDir, err := filepath.Abs(filepath.Dir(os.Args[0]))
+  if err != nil {
+    log.Fatal(err)
+  } else {
+    println(srcDir)
+  }
 }
 
 func createConfig() {

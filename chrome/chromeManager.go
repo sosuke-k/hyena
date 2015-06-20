@@ -10,7 +10,6 @@ import (
 )
 
 func Save(disPath string) {
-  // log.Fatal(disPath)
   execJXA("save", disPath)
 }
 

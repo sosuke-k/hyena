@@ -13,7 +13,7 @@ insert_final_newline = true
 [*.{go,applescript}]
 charset = utf-8
 
-# 2 space indentation
-# [*.go]
-# indent_style = space
-# indent_size = 2
+# 8 width indentation
+[*.go]
+indent_style = tab
+indent_size = 8

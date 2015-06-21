@@ -10,6 +10,7 @@ import (
 	"github.com/bitly/go-simplejson"
 )
 
+// Init creates a config file and if a parent directory not exists, also creates it.
 func Init(configPath string) {
 	hyenaPath := filepath.Dir(configPath)
 	if err := os.MkdirAll(hyenaPath, 0777); err != nil {
@@ -28,6 +29,7 @@ func Init(configPath string) {
 	w.Write(o)
 }
 
+// Load returns the string array of projects' name by the path of config file
 func Load(configPath string) (projects []string) {
 
 	r, err := os.Open(configPath)
@@ -48,17 +50,18 @@ func Load(configPath string) (projects []string) {
 	return
 }
 
+// Add adds a project to project list by the path of config file
 func Add(configPath string, newProject string) {
 	projects := Load(configPath)
 	projects = append(projects, newProject)
 	js := simplejson.New()
-	projectJson := simplejson.New()
+	projectJSON := simplejson.New()
 
 	for i, v := range projects {
-		projectJson.Set(strconv.Itoa(i), v)
+		projectJSON.Set(strconv.Itoa(i), v)
 	}
 	js.Set("length", len(projects))
-	js.Set("projects", projectJson)
+	js.Set("projects", projectJSON)
 	w, err := os.Create(configPath)
 	if err != nil {
 		log.Fatal(err)

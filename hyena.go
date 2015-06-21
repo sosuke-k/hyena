@@ -21,7 +21,7 @@ var configPath string //e.g. 'Users/name/.config/hyena/config.json'
 var srcDir string     //e.g. 'Users/name/go/~~~'
 
 func validError(errs ...error) error {
-	for i, _ := range errs {
+	for i := range errs {
 		if errs[i] != nil {
 			return errs[i]
 		}
@@ -72,7 +72,7 @@ func main() {
 				scanner := bufio.NewScanner(os.Stdin)
 				scanner.Scan()
 				if err := scanner.Err(); err != nil {
-					println(os.Stderr, "reading standard input:", err)
+					println("reading standard input:", err)
 				}
 				a := scanner.Text()
 				if a == "y" {

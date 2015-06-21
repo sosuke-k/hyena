@@ -9,10 +9,12 @@ import (
 	"path/filepath"
 )
 
+// Save saves chrome windows info to the config file at disPath
 func Save(disPath string) {
 	execJXA("save", disPath)
 }
 
+// Restore restores chrome windows by the config file at disPath
 func Restore(disPath string) {
 	execJXA("restore", disPath)
 }

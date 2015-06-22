@@ -7,11 +7,17 @@ import (
 	"os/exec"
 	"path"
 	"path/filepath"
+
+	"github.com/sosuke-k/hyena/util/jxa"
 )
 
 // Save saves acrobat windows info to the config file at disPath
 func Save(disPath string) {
-	execJXA("save", disPath)
+	if jxa.Check("com.adobe.Acrobat.Pro") {
+		execJXA("save", disPath)
+	} else {
+		fmt.Println("Acrobat Pro is not running")
+	}
 }
 
 // Restore restores acrobat windows by the config file at disPath

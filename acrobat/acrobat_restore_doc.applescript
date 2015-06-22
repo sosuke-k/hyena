@@ -1,7 +1,7 @@
 #!/usr/bin/env osascript -l JavaScript
 
 function acrobat_restore_doc(json_string) {
-    app = Application('Adobe Acrobat');
+    var app = Application('Adobe Acrobat');
     var data = JSON.parse(json_string);
     var docs = data[0];
 
@@ -36,6 +36,12 @@ function fileReader(pathAsString) {
 
 
 function run(argv) {
+    try {
+      var app = Application('Adobe Acrobat');
+    } catch (e) {
+      console.log(e);
+      return false;
+    }
     var reader = fileReader(argv);
     var data = reader.read();
     reader.close();

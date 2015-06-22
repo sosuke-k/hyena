@@ -5,10 +5,10 @@ import (
 	"os"
 	"os/user"
 	"path"
-
 	// "fmt"
-	"log"
 	// "bytes"
+	"log"
+
 	"github.com/codegangsta/cli"
 	// "github.com/codeskyblue/go-sh"
 	// "github.com/kardianos/osext"
@@ -31,6 +31,8 @@ func validError(errs ...error) error {
 	return nil
 }
 
+// this function not correspond to 'hyena init' command
+// call this function before all command
 func init() {
 	hyenaPath = os.Getenv("HYENA_DIR_PATH")
 	if hyenaPath == "" {

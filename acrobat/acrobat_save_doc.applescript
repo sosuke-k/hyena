@@ -43,6 +43,12 @@ function fileWriter(pathAsString) {
 }
 
 function run(argv) {
+    try {
+      var app = Application('Adobe Acrobat');
+    } catch (e) {
+      console.log(e);
+      return false;
+    }
     var data = acrobat_get_docs_info();
     var exportFileWriter = fileWriter(argv);
     exportFileWriter.write(data);

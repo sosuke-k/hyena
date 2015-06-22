@@ -15,8 +15,6 @@ import (
 func Save(disPath string) {
 	if jxa.Check("com.adobe.Acrobat.Pro") {
 		execJXA("save", disPath)
-	} else {
-		fmt.Println("Acrobat Pro is not running")
 	}
 }
 

@@ -6,11 +6,13 @@ import (
 	"os/user"
 	"path"
 	// "fmt"
-	"log"
 	// "bytes"
+	"log"
+
 	"github.com/codegangsta/cli"
 	// "github.com/codeskyblue/go-sh"
 	// "github.com/kardianos/osext"
+	"github.com/sosuke-k/hyena/acrobat"
 	"github.com/sosuke-k/hyena/chrome"
 	"github.com/sosuke-k/hyena/pm"
 )
@@ -29,6 +31,8 @@ func validError(errs ...error) error {
 	return nil
 }
 
+// this function not correspond to 'hyena init' command
+// call this function before all command
 func init() {
 	hyenaPath = os.Getenv("HYENA_DIR_PATH")
 	if hyenaPath == "" {
@@ -44,11 +48,13 @@ func init() {
 func save(projectName string) {
 	projectPath := path.Join(hyenaPath, projectName)
 	chrome.Save(path.Join(projectPath, "chrome.json"))
+	acrobat.Save(path.Join(projectPath, "acrobat.json"))
 }
 
 func restore(projectName string) {
 	projectPath := path.Join(hyenaPath, projectName)
 	chrome.Restore(path.Join(projectPath, "chrome.json"))
+	acrobat.Restore(path.Join(projectPath, "acrobat.json"))
 }
 
 func main() {

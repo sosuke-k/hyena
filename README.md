@@ -1,8 +1,6 @@
 ## hyena
 
-
-
-[![Gyazo](http://i.gyazo.com/70a5a135291e5b9bf19d3ba1489ca060.png)](http://gyazo.com/70a5a135291e5b9bf19d3ba1489ca060)
+![hyena demo gif](https://raw.githubusercontent.com/sosuke-k/hyena/master/hyena.gif "hyena demo")
 
 ## Dependencies
 

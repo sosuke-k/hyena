@@ -2,11 +2,9 @@ package jxa
 
 import (
 	"fmt"
-	"log"
 	"os"
 	"os/exec"
 	"path"
-	"path/filepath"
 	"strings"
 )
 
@@ -16,14 +14,15 @@ func Check(identifier string) (isRunning bool) {
 		cmdOut []byte
 		err    error
 	)
-	srcDir, err := filepath.Abs(filepath.Dir(os.Args[0])) // i.e. $GOPATH/src/github.com/sosuke-k/hyena
-	if err != nil {
-		log.Fatal(err)
-	}
+	srcDir := path.Join(os.Getenv("GOPATH"), "src/github.com/sosuke-k/hyena")
 	srcPath := path.Join(srcDir, "util/jxa/running_checker.applescript")
 	shCmd := "osascript"
 	args := []string{"-l", "JavaScript", srcPath, identifier}
 	if cmdOut, err = exec.Command(shCmd, args...).Output(); err != nil {
+		fmt.Println(shCmd)
+		for i := range args {
+			fmt.Println("  " + args[i])
+		}
 		fmt.Fprintln(os.Stderr, err)
 		os.Exit(1)
 	}

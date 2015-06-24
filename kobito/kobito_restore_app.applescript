@@ -5,7 +5,8 @@ function get_n_by_title(title) {
   app.includeStandardAdditions = true;
   cmd = "kobito ls | cat -n | grep '" + title + "' | tr -s ' ' ',' | tr -s '\t' ',' | cut -d ',' -f 2";
   var out = app.doShellScript(cmd);
-  return parseInt(out) - 1;
+  out = parseInt(out) - 1;
+  return typeof(out) == "number" ? out : 0;
 }
 
 // Kobito must be activated
@@ -15,7 +16,9 @@ function open_n_th_item(n) {
   for (var i = 0; i < n - 1; i++) {
     se.keyCode(125); // Press Key Down
   }
-  se.keystroke("o");
+  se.keystroke("e", {
+    using: "command down"
+  });
 }
 
 function activate_kobito() {
@@ -28,32 +31,34 @@ function activate_kobito() {
   delay(1);
 }
 
-fucntion get_one_title(json_string) {
+function get_one_title(json_string) {
   var data = JSON.parse(json_string);
-  var l = Object.keys(data).length;
-  return l > 0 ? data[0] : "";
+  var array = data[0];
+  var l = array.length;
+  var title = l > 0 ? array[0] : "";
+  return (title == "Kobito" && l > 1) ? array[1] : title;
 }
 
 function fileReader(pathAsString) {
-    'use strict';
+  'use strict';
 
-    var app = Application.currentApplication();
-    app.includeStandardAdditions = true;
-    var path = Path(pathAsString);
-    var file = app.openForAccess(path);
+  var app = Application.currentApplication();
+  app.includeStandardAdditions = true;
+  var path = Path(pathAsString);
+  var file = app.openForAccess(path);
 
-    var eof = app.getEof(file);
+  var eof = app.getEof(file);
 
-    return {
-        read: function() {
-            return app.read(file, {
-                to: eof
-            });
-        },
-        close: function() {
-            app.closeAccess(file);
-        }
-    };
+  return {
+    read: function() {
+      return app.read(file, {
+        to: eof
+      });
+    },
+    close: function() {
+      app.closeAccess(file);
+    }
+  };
 }
 
 function run(argv) {

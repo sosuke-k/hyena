@@ -1,50 +1,57 @@
 #!/usr/bin/env osascript -l JavaScript
 
 function acrobat_restore_doc(json_string) {
-    var app = Application('Adobe Acrobat');
-    var data = JSON.parse(json_string);
-    var docs = data[0];
+  var app = Application('Adobe Acrobat');
+  var data = JSON.parse(json_string);
+  var docs = data[0];
 
-    for (i = 0; i < docs.length; i++) {
-        app.open(Path(docs[i]));
-    }
-    return;
+  for (i = 0; i < docs.length; i++) {
+    app.open(Path(docs[i]));
+  }
+  return;
 }
 
 
 function fileReader(pathAsString) {
-    'use strict';
+  'use strict';
 
-    var app = Application.currentApplication();
-    app.includeStandardAdditions = true;
-    var path = Path(pathAsString);
-    var file = app.openForAccess(path);
+  var app = Application.currentApplication();
+  app.includeStandardAdditions = true;
+  var path = Path(pathAsString);
+  var file = app.openForAccess(path);
 
-    var eof = app.getEof(file);
+  var eof = app.getEof(file);
 
-    return {
-        read: function() {
-            return app.read(file, {
-                to: eof
-            });
-        },
-        close: function() {
-            app.closeAccess(file);
-        }
-    };
+  return {
+    read: function() {
+      return app.read(file, {
+        to: eof
+      });
+    },
+    close: function() {
+      app.closeAccess(file);
+    }
+  };
 }
 
 
 function run(argv) {
-    try {
-      var app = Application('Adobe Acrobat');
-    } catch (e) {
-      console.log(e);
-      return false;
-    }
-    var reader = fileReader(argv);
-    var data = reader.read();
-    reader.close();
+  try {
+    var app = Application('Adobe Acrobat');
+  } catch (e) {
+    console.log(e);
+    return false;
+  }
 
-    acrobat_restore_doc(data);
+  var reader = fileReader(argv);
+  try {
+    var data = reader.read();
+  } catch (e) {
+    console.log(e);
+    return false;
+  } finally {
+    reader.close();
+  }
+
+  acrobat_restore_doc(data);
 }

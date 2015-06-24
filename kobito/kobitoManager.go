@@ -11,14 +11,14 @@ import (
 	"github.com/sosuke-k/hyena/util/jxa"
 )
 
-// Save saves acrobat windows info to the config file at disPath
+// Save saves kobito windows info to the config file at disPath
 func Save(disPath string) {
 	if jxa.Check("com.qiita.Kobito") {
 		execJXA("save", disPath)
 	}
 }
 
-// Restore restores acrobat windows by the config file at disPath
+// Restore restores kobito windows by the config file at disPath
 func Restore(disPath string) {
 	execJXA("restore", disPath)
 }

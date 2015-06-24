@@ -22,7 +22,7 @@ func Restore(disPath string) {
  */
 func execJXA(cmd string, disPath string) {
 	srcDir := path.Join(os.Getenv("GOPATH"), "src/github.com/sosuke-k/hyena")
-	srcPath := path.Join(srcDir, "chrome/chrome_"+cmd+"_tab.applescript")
+	srcPath := path.Join(srcDir, "app/chrome/chrome_"+cmd+"_tab.applescript")
 	shCmd := "osascript"
 	args := []string{"-l", "JavaScript", srcPath, disPath}
 	if err := exec.Command(shCmd, args...).Run(); err != nil {

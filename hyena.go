@@ -14,6 +14,7 @@ import (
 	// "github.com/kardianos/osext"
 	"github.com/sosuke-k/hyena/acrobat"
 	"github.com/sosuke-k/hyena/chrome"
+	"github.com/sosuke-k/hyena/kobito"
 	"github.com/sosuke-k/hyena/util/pm"
 )
 
@@ -49,6 +50,7 @@ func save(projectName string) {
 	projectPath := path.Join(hyenaPath, projectName)
 	chrome.Save(path.Join(projectPath, "chrome.json"))
 	acrobat.Save(path.Join(projectPath, "acrobat.json"))
+	kobito.Save(path.Join(projectPath, "kobito.json"))
 }
 
 func restore(projectName string) {

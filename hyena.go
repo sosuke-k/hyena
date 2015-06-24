@@ -14,7 +14,7 @@ import (
 	// "github.com/kardianos/osext"
 	"github.com/sosuke-k/hyena/acrobat"
 	"github.com/sosuke-k/hyena/chrome"
-	"github.com/sosuke-k/hyena/pm"
+	"github.com/sosuke-k/hyena/util/pm"
 )
 
 var projects = []string{}

@@ -12,9 +12,9 @@ import (
 	"github.com/codegangsta/cli"
 	// "github.com/codeskyblue/go-sh"
 	// "github.com/kardianos/osext"
-	"github.com/sosuke-k/hyena/acrobat"
-	"github.com/sosuke-k/hyena/chrome"
-	"github.com/sosuke-k/hyena/kobito"
+	"github.com/sosuke-k/hyena/app/acrobat"
+	"github.com/sosuke-k/hyena/app/chrome"
+	"github.com/sosuke-k/hyena/app/kobito"
 	"github.com/sosuke-k/hyena/util/pm"
 )
 

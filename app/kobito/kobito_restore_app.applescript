@@ -17,6 +17,7 @@ function open_n_th_item(n) {
     delay(0.1);
     se.keyCode(125); // Press Key Down
   }
+  delay(0.1);
   se.keystroke("e", {
     using: "command down"
   });

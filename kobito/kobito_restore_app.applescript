@@ -3,7 +3,7 @@
 function get_n_by_title(title) {
   var app = Application.currentApplication();
   app.includeStandardAdditions = true;
-  cmd = "kobito ls | cat -n | grep '" + title + "' | tr -s ' ' ',' | tr -s '\t' ',' | cut -d ',' -f 2";
+  cmd = "kobito ls | cat -n | grep '" + title + "' | cut -f 1";
   var out = app.doShellScript(cmd);
   out = parseInt(out) - 1;
   return typeof(out) == "number" ? out : 0;

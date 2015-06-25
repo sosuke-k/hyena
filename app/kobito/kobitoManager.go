@@ -26,7 +26,7 @@ func Restore(disPath string) {
  */
 func execJXA(cmd string, disPath string) {
 	srcDir := path.Join(os.Getenv("GOPATH"), "src/github.com/sosuke-k/hyena")
-	srcPath := path.Join(srcDir, "kobito/kobito_"+cmd+"_app.applescript")
+	srcPath := path.Join(srcDir, "app/kobito/kobito_"+cmd+"_app.applescript")
 	shCmd := "osascript"
 	args := []string{"-l", "JavaScript", srcPath, disPath}
 	if err := exec.Command(shCmd, args...).Run(); err != nil {

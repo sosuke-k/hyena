@@ -1,22 +1,18 @@
-package acrobat
+package chrome
 
 import (
 	"fmt"
 	"os"
 	"os/exec"
 	"path"
-
-	"github.com/sosuke-k/hyena/util/jxa"
 )
 
-// Save saves acrobat windows info to the config file at disPath
+// Save saves chrome windows info to the config file at disPath
 func Save(disPath string) {
-	if jxa.Check("com.adobe.Acrobat.Pro") {
-		execJXA("save", disPath)
-	}
+	execJXA("save", disPath)
 }
 
-// Restore restores acrobat windows by the config file at disPath
+// Restore restores chrome windows by the config file at disPath
 func Restore(disPath string) {
 	execJXA("restore", disPath)
 }
@@ -26,7 +22,7 @@ func Restore(disPath string) {
  */
 func execJXA(cmd string, disPath string) {
 	srcDir := path.Join(os.Getenv("GOPATH"), "src/github.com/sosuke-k/hyena")
-	srcPath := path.Join(srcDir, "acrobat/acrobat_"+cmd+"_doc.applescript")
+	srcPath := path.Join(srcDir, "app/chrome/chrome_"+cmd+"_tab.applescript")
 	shCmd := "osascript"
 	args := []string{"-l", "JavaScript", srcPath, disPath}
 	if err := exec.Command(shCmd, args...).Run(); err != nil {

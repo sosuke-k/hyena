@@ -14,6 +14,7 @@ function open_n_th_item(n) {
   var se = Application('System Events')
   se.includeStandardAdditions = true;
   for (var i = 0; i < n - 1; i++) {
+    delay(0.1);
     se.keyCode(125); // Press Key Down
   }
   se.keystroke("e", {

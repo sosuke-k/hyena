@@ -8,8 +8,6 @@ _hyena()
     COMPREPLY=( $(compgen -W "init ls add save restore" -- $cur) );;
   2)
     COMPREPLY=( $(compgen -W "$(hyena ls)" -- $cur) );;
-  *)
-    COMPREPLY=( $(compgen -W "$(ls)" -- $cur) );;
   esac
 }
 complete -F _hyena hyena

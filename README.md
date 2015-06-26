@@ -10,8 +10,19 @@
 ## Install
 
 ```
-go get github.com/sosuke-k/hyena
+go get -u github.com/sosuke-k/hyena
 ```
+
+
+## Tutrial
+
+```
+hyena init
+hyena add your_first_project
+hyena save your_first_project
+hyena restore your_first_project
+```
+
 
 ### Enable Completion for Bash
 

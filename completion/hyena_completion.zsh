@@ -18,8 +18,7 @@ __hyena_modes(){
 }
 
 __hyena_projects(){
-    projects = $(hyena ls)
     _values \
         'projects' \
-        projects
+        $(hyena ls | tr "\t" " ")
 }

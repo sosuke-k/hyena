@@ -34,3 +34,19 @@ func Check(identifier string) (isRunning bool) {
 	}
 	return
 }
+
+// Execute executes osascript with args
+func Execute(dir string, args []string) {
+	shCmd := "osascript"
+	cmd := exec.Command(shCmd, args...)
+	cmd.Dir = dir
+	cmd.Stderr = os.Stderr
+	if err := cmd.Run(); err != nil {
+		fmt.Println("when executing")
+		fmt.Println(shCmd)
+		for i := range args {
+			fmt.Println("  " + args[i])
+		}
+		fmt.Fprintln(os.Stderr, err)
+	}
+}

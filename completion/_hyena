@@ -1,10 +1,25 @@
-#compdef hyena
+#compdef _hyena hyena
 #autoload
 
-_values \
-    'mode' \
-    'init[Initialize hyena (Should be executed only when you installed hyena)]'\
-    'ls[List all your projects]' \
-    'add[Add a new project]' \
-    'save[Save current state to the project]' \
-    'restore[Restore project]'
+_hyena(){
+    _arguments \
+        '1: :__hyena_modes' \
+        '2: :__hyena_projects'
+}
+
+__hyena_modes(){
+    _values \
+        'mode' \
+        'init[Initialize hyena (Should be executed only when you installed hyena)]' \
+        'ls[List all your projects]' \
+        'add[Add a new project]' \
+        'save[Save current state to the project]' \
+        'restore[Restore project]'
+}
+
+__hyena_projects(){
+    projects = $(hyena ls)
+    _values \
+        'projects' \
+        projects
+}

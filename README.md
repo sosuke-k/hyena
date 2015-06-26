@@ -39,12 +39,14 @@ go get github.com/sosuke-k/hyena
         - `/usr/share/zsh/x.y.z/functions` (x.y.z stands for the version)
 
     2. Or, copy it somewhere (e.g. `~/hyena_completion.zsh`) and put the following line in the `~/.zshrc` file:
-    ```sh
-            source /path/to/hyena_completion.zsh
-    ```
+        ```sh
+                source /path/to/hyena_completion.zsh
+        ```
 
     3. Done! Enjoy completion :octocat:
+
     ![](http://i.gyazo.com/3af265e68f994a3c826d364413b85793.gif)
+    
 ## Usage
 
 <usage>

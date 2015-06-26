@@ -1,10 +1,10 @@
 package chrome
 
 import (
-	"fmt"
 	"os"
-	"os/exec"
 	"path"
+
+	"github.com/sosuke-k/hyena/util/jxa"
 )
 
 // Save saves chrome windows info to the config file at disPath
@@ -21,16 +21,8 @@ func Restore(disPath string) {
  * the parent directory of disPath must exist
  */
 func execJXA(cmd string, disPath string) {
-	srcDir := path.Join(os.Getenv("GOPATH"), "src/github.com/sosuke-k/hyena")
-	srcPath := path.Join(srcDir, "app/chrome/chrome_"+cmd+"_tab.applescript")
-	shCmd := "osascript"
-	args := []string{"-l", "JavaScript", srcPath, disPath}
-	if err := exec.Command(shCmd, args...).Run(); err != nil {
-		fmt.Println(shCmd)
-		for i := range args {
-			fmt.Println("  " + args[i])
-		}
-		fmt.Fprintln(os.Stderr, err)
-		os.Exit(1)
-	}
+	srcDir := path.Join(os.Getenv("GOPATH"), "src/github.com/sosuke-k/hyena/app/chrome")
+	fileName := "chrome_" + cmd + "_tab.applescript"
+	args := []string{"-l", "JavaScript", fileName, disPath}
+	jxa.Execute(srcDir, args)
 }

@@ -22,7 +22,7 @@ go get github.com/sosuke-k/hyena
    2. Or, copy it somewhere (e.g. `~/hyena_completion.bash`) and put the following line in the `.profile` or
       `.bashrc` file in your home directory:
        ```sh
-           source ~/hyena_completion.bash
+       source ~/hyena_completion.bash
        ```
 
 ### Enable Completion for Fish

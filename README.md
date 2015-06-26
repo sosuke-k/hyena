@@ -22,14 +22,31 @@ go get github.com/sosuke-k/hyena
 
    2. Or, copy it somewhere (e.g. `~/hyena_completion.bash`) and put the following line in the `.profile` or
       `.bashrc` file in your home directory:
-
-           source ~/hyena_completion.bash
-
+       ```sh
+       source ~/hyena_completion.bash
+       ```
 
 ### Enable Completion for Fish
 
 1. Install `hyena_completion.fish` in your `~/.config/fish/completions` folder.
 
+### Enable Completion for Zsh
+
+1. Install `hyena_completion.zsh` in either ways:
+
+    1. Place it in your `$fpath` directories where zsh-completion functions are stored. It is usually
+
+        - `/usr/share/zsh/site-functions`
+        - `/usr/share/zsh/x.y.z/functions` (x.y.z stands for the version)
+
+    2. Or, copy it somewhere (e.g. `~/hyena_completion.zsh`) and put the following line in the `~/.zshrc` file:
+        ```sh
+        source /path/to/hyena_completion.zsh
+        ```
+
+    3. Done! Enjoy completion :octocat:
+
+    ![](http://i.gyazo.com/3af265e68f994a3c826d364413b85793.gif)
 
 ## Usage
 

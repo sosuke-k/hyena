@@ -2,6 +2,7 @@ package main
 
 import (
 	"bufio"
+	"fmt"
 	"os"
 	"os/user"
 	"path"
@@ -97,9 +98,11 @@ func main() {
 			Usage:   "show the list",
 			Action: func(c *cli.Context) {
 				projects = pm.Load(configPath)
+				projectString := ""
 				for _, v := range projects {
-					println(v)
+					projectString += v + "\t"
 				}
+				fmt.Fprintln(os.Stdout, projectString)
 			},
 		}, // end ls action definition
 		{

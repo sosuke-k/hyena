@@ -58,6 +58,7 @@ func restore(projectName string) {
 	projectPath := path.Join(hyenaPath, projectName)
 	chrome.Restore(path.Join(projectPath, "chrome.json"))
 	acrobat.Restore(path.Join(projectPath, "acrobat.json"))
+	kobito.Restore(path.Join(projectPath, "kobito.json"))
 }
 
 func main() {

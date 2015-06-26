@@ -5,9 +5,13 @@ function kobito_get_window_info() {
     systemEvent.includeStandardAdditions = true;
 
     var kobitoProcess = systemEvent.processes.byName('Kobito');
-    // If the system language is English
     var windowMenu = kobitoProcess.menuBars[0].menuBarItems.byName('Window');
-    // If the system language is other than English, you have to change the above 'byName' argument
+    try {
+      console.log(windowMenu.menus[0].menuItems.length);
+    } catch (e) {
+      console.log(e);
+      windowMenu = kobitoProcess.menuBars[0].menuBarItems.byName('ウィンドウ');
+    }
     var windowItems = windowMenu.menus[0].menuItems;
     var res = {};
     res[0] = [];

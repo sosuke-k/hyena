@@ -3,19 +3,19 @@
 function preview_get_docs_info(){
     app = Application('Preview');
     var res = {};
-
-    for (i = 0; i < app.windows().length; i++) { // multiple windows
-        docPath = app.windows()[i].document().path();
-        console.log(docPath);
-        
-        res[i] = [];
-        res[i].push(docPath);
+    res[0] = [];
+    for (i = 0; i < app.documents().length; i++) { // multiple windows
+        doc =  app.documents()[i];
+        docPath = doc.path();
+        res[0].push(docPath);
 
         // for (j = 0; j < app.windows()[i].length; j++) {
         //     console.log(app.windows()[i].documents()[j].path());
         // }
 
     }
+    var data = JSON.stringify(res);
+    return data;
 }
 
 function fileWriter(pathAsString) {
@@ -50,7 +50,7 @@ function fileWriter(pathAsString) {
 function run(argv) {
     var data = preview_get_docs_info();
     console.log(data);
-    // var exportFileWriter = fileWriter(argv);
-    // exportFileWriter.write(data);
-    // exportFileWriter.close();
+    var exportFileWriter = fileWriter(argv);
+    exportFileWriter.write(data);
+    exportFileWriter.close();
 }

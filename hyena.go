@@ -13,7 +13,9 @@ import (
 	"github.com/codegangsta/cli"
 	// "github.com/codeskyblue/go-sh"
 	// "github.com/kardianos/osext"
+
 	"github.com/sosuke-k/hyena/app/acrobat"
+	"github.com/sosuke-k/hyena/app/atom"
 	"github.com/sosuke-k/hyena/app/chrome"
 	"github.com/sosuke-k/hyena/app/kobito"
 	"github.com/sosuke-k/hyena/util/pm"
@@ -52,6 +54,7 @@ func save(projectName string) {
 	chrome.Save(path.Join(projectPath, "chrome.json"))
 	acrobat.Save(path.Join(projectPath, "acrobat.json"))
 	kobito.Save(path.Join(projectPath, "kobito.json"))
+	atom.Save(path.Join(projectPath, "atom.json"))
 }
 
 func restore(projectName string) {
@@ -59,6 +62,7 @@ func restore(projectName string) {
 	chrome.Restore(path.Join(projectPath, "chrome.json"))
 	acrobat.Restore(path.Join(projectPath, "acrobat.json"))
 	kobito.Restore(path.Join(projectPath, "kobito.json"))
+	atom.Restore(path.Join(projectPath, "atom.json"))
 }
 
 func main() {

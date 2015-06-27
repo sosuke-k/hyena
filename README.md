@@ -41,6 +41,8 @@ go get github.com/sosuke-k/hyena
 
     2. Or, copy it somewhere (e.g. `~/hyena_completion.zsh`) and put the following line in the `~/.zshrc` file:
         ```sh
+        autoload -U compinit
+        compinit
         source /path/to/hyena_completion.zsh
         ```
 

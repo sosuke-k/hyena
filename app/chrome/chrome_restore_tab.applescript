@@ -22,31 +22,9 @@ function chrome_restore_tabs(json_string) {
 }
 
 
-function fileReader(pathAsString) {
-    'use strict';
-
-    var app = Application.currentApplication();
-    app.includeStandardAdditions = true;
-    var path = Path(pathAsString);
-    var file = app.openForAccess(path);
-
-    var eof = app.getEof(file);
-
-    return {
-        read: function() {
-            return app.read(file, {
-                to: eof
-            });
-        },
-        close: function() {
-            app.closeAccess(file);
-        }
-    };
-}
-
-
 function run(argv) {
-    var reader = fileReader(argv);
+    fileIO = Library('fileIO');
+    var reader = fileIO.fileReader(argv);
     var data = reader.read();
     reader.close();
 

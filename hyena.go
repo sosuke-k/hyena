@@ -18,6 +18,7 @@ import (
 	"github.com/sosuke-k/hyena/app/atom"
 	"github.com/sosuke-k/hyena/app/chrome"
 	"github.com/sosuke-k/hyena/app/kobito"
+	"github.com/sosuke-k/hyena/util/jxa"
 	"github.com/sosuke-k/hyena/util/pm"
 )
 
@@ -90,6 +91,7 @@ func main() {
 				}
 				a := scanner.Text()
 				if a == "y" {
+					jxa.Compile()
 					pm.Init(configPath)
 					println("config file was created")
 				} else {

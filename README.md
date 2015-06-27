@@ -19,15 +19,21 @@ hyena init
 
 1. Create your project.
 
-    `hyena add project_name`
+    ```sh
+    hyena add project_name
+    ```
 
 2. Save the current states of applications to your project.
 
-    `hyena save project_name`
+    ```sh
+    hyena save project_name
+    ```
 
 3. Restore the states of applications from your project.
 
-    `hyena restore project_name`
+    ```sh
+    hyena restore project_name
+    ```
 
 
 ### Enable Completion for Bash

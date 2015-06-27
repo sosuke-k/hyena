@@ -17,28 +17,6 @@ function restore_atom_windows(json_string) {
   return;
 }
 
-function fileReader(pathAsString) {
-    'use strict';
-
-    var app = Application.currentApplication();
-    app.includeStandardAdditions = true;
-    var path = Path(pathAsString);
-    var file = app.openForAccess(path);
-
-    var eof = app.getEof(file);
-
-    return {
-        read: function() {
-            return app.read(file, {
-                to: eof
-            });
-        },
-        close: function() {
-            app.closeAccess(file);
-        }
-    };
-}
-
 
 function run(argv) {
     try {
@@ -47,16 +25,12 @@ function run(argv) {
       console.log(e);
       return false;
     }
-
-    var reader = fileReader(argv);
-    var data = null;
-    try {
-      data = reader.read();
-    } catch (e) {
+    
+    fileIO = Library('fileIO');
+    var data = fileIO.read(argv);
+    if (!data) {
       console.log(e);
       return false;
-    } finally {
-      reader.close();
     }
 
     restore_atom_windows(data);

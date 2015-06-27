@@ -19,15 +19,12 @@ function run(argv) {
     console.log(e);
     return false;
   }
+
   fileIO = Library('fileIO');
-  var reader = fileIO.fileReader(argv);
-  try {
-    var data = reader.read();
-  } catch (e) {
+  var data = fileIO.read(argv);
+  if (!data) {
     console.log(e);
     return false;
-  } finally {
-    reader.close();
   }
 
   acrobat_restore_doc(data);

@@ -11,17 +11,23 @@
 
 ```
 go get -u github.com/sosuke-k/hyena
-```
-
-
-## Tutrial
-
-```
 hyena init
-hyena add your_first_project
-hyena save your_first_project
-hyena restore your_first_project
 ```
+
+
+## Tutorial
+
+1. Create your project.
+
+    `hyena add project_name`
+
+2. Save the current states of applications to your project.
+
+    `hyena save project_name`
+
+3. Restore the states of applications from your project.
+
+    `hyena restore project_name`
 
 
 ### Enable Completion for Bash

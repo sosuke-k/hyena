@@ -25,14 +25,13 @@ function run(argv) {
       console.log(e);
       return false;
     }
+    
     fileIO = Library('fileIO');
-    var data = null;
-    try {
-      data = fileIO.read(argv);
-    } catch (e) {
+    var data = fileIO.read(argv);
+    if (!data) {
       console.log(e);
       return false;
-    } 
+    }
 
     restore_atom_windows(data);
 }

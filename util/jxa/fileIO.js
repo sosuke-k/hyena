@@ -32,10 +32,15 @@ function read(pathAsString) {
 
     var eof = app.getEof(file);
 
-    var data = app.read(file, {
-        to: eof
-    });
-
-    app.closeAccess(file);
+    var data = null;
+    try {
+        data = app.read(file, {
+            to: eof
+        });
+    } catch (e) {
+        return false;
+    } finally {
+        app.closeAccess(file);
+    }
     return data;
 }

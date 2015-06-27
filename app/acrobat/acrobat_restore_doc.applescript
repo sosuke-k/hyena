@@ -20,8 +20,9 @@ function run(argv) {
     return false;
   }
   fileIO = Library('fileIO');
+  var data = null;
   try {
-    var data = fileIO.read(argv);
+    data = fileIO.read(argv);
   } catch (e) {
     console.log(e);
     return false;

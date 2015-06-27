@@ -39,7 +39,7 @@ go get github.com/sosuke-k/hyena
         - `/usr/share/zsh/site-functions`
         - `/usr/share/zsh/x.y.z/functions` (x.y.z stands for the version)
 
-    2. Or, copy it somewhere (e.g. `~/hyena_completion.zsh`) and put the following line in the `~/.zshrc` file:
+    2. Or, copy it somewhere (e.g. `~/hyena_completion.zsh`) and put the following lines in the `~/.zshrc` file:
         ```sh
         autoload -U compinit
         compinit

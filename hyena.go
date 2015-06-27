@@ -19,6 +19,7 @@ import (
 	"github.com/sosuke-k/hyena/app/chrome"
 	"github.com/sosuke-k/hyena/app/kobito"
 	"github.com/sosuke-k/hyena/util/jxa"
+	"github.com/sosuke-k/hyena/util/log"
 	"github.com/sosuke-k/hyena/util/pm"
 )
 
@@ -48,6 +49,8 @@ func init() {
 		hyenaPath = path.Join(usr.HomeDir, ".config/hyena")
 	}
 	configPath = path.Join(hyenaPath, "config.json")
+	hyenaLogger := logger.GetInstance()
+	hyenaLogger.Println("Starting hyena...")
 }
 
 func save(projectName string) {
@@ -104,12 +107,15 @@ func main() {
 			Aliases: []string{"l"},
 			Usage:   "show the list",
 			Action: func(c *cli.Context) {
+				hyenaLogger := logger.GetInstance()
+				hyenaLogger.Println("to run ls command")
 				projects = pm.Load(configPath)
 				projectString := ""
 				for _, v := range projects {
 					projectString += v + "\t"
 				}
 				fmt.Fprintln(os.Stdout, projectString)
+				hyenaLogger.Println("finished ls command")
 			},
 		}, // end ls action definition
 		{

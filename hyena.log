@@ -1,0 +1,18 @@
+2015/06/28 06:28:21 to execete jxa
+2015/06/28 06:28:21 2015-06-28 06:28:21.837 chrome_save_tab.applescript[51723:1850976] warning: failed to get scripting definition from /Users/katososuke/Library/Script Libraries/fileIO.scpt; it may not be scriptable.
+chrome_save_tab.applescript:34:74: execution error: Error on line 3: Error: Application can't be found. (-2700)
+
+2015/06/28 06:58:07 to execete jxa
+2015/06/28 06:58:07 2015-06-28 06:58:07.205 chrome_save_tab.applescript[52299:1867495] warning: failed to get scripting definition from /Users/katososuke/Library/Script Libraries/fileIO.scpt; it may not be scriptable.
+chrome_save_tab.applescript:34:74: execution error: Error on line 3: Error: Application can't be found. (-2700)
+
+2015/06/28 06:59:07 to execete jxa
+2015/06/28 06:59:07 2015-06-28 06:59:07.552 chrome_save_tab.applescript[52468:1868442] warning: failed to get scripting definition from /Users/katososuke/Library/Script Libraries/fileIO.scpt; it may not be scriptable.
+chrome_save_tab.applescript:34:74: execution error: Error on line 3: Error: Application can't be found. (-2700)
+
+2015/06/28 07:24:54 2015-06-28 07:24:54.807 chrome_save_tab.applescript[52982:1883412] warning: failed to get scripting definition from /Users/katososuke/Library/Script Libraries/fileIO.scpt; it may not be scriptable.
+chrome_save_tab.applescript:34:74: execution error: Error on line 3: Error: Application can't be found. (-2700)
+
+2015/06/28 07:25:01 2015-06-28 07:25:01.430 chrome_save_tab.applescript[52997:1883602] warning: failed to get scripting definition from /Users/katososuke/Library/Script Libraries/fileIO.scpt; it may not be scriptable.
+chrome_save_tab.applescript:34:74: execution error: Error on line 3: Error: Application can't be found. (-2700)
+

@@ -1,11 +1,15 @@
 package jxa
 
 import (
+	"bytes"
 	"fmt"
 	"os"
 	"os/exec"
 	"path"
 	"strings"
+	"unsafe"
+
+	"github.com/sosuke-k/hyena/util/log"
 )
 
 // Check checks if the application of identifier is running
@@ -38,15 +42,39 @@ func Check(identifier string) (isRunning bool) {
 // Execute executes osascript with args
 func Execute(dir string, args []string) {
 	shCmd := "osascript"
+
+	hyenaLogger := logger.GetInstance()
+	hyenaLogger.Println("to execete " + shCmd)
+	for i := range args {
+		hyenaLogger.Println("  " + args[i])
+	}
+	fmt.Fprintln(os.Stdout, "to execete "+shCmd+" "+args[2])
+
 	cmd := exec.Command(shCmd, args...)
 	cmd.Dir = dir
-	cmd.Stderr = os.Stderr
-	if err := cmd.Run(); err != nil {
-		fmt.Println("when executing")
-		fmt.Println(shCmd)
-		for i := range args {
-			fmt.Println("  " + args[i])
-		}
-		fmt.Fprintln(os.Stderr, err)
+	stderr, err := cmd.StderrPipe()
+	if err != nil {
+		hyenaLogger.Fatalln(err)
+	}
+	if err := cmd.Start(); err != nil {
+		hyenaLogger.Fatalln(err)
+	}
+	fmt.Fprintln(os.Stdout, "Waiting for "+shCmd+" command to finish...")
+
+	errBuf := new(bytes.Buffer)
+	errBuf.ReadFrom(stderr)
+	errBytes := errBuf.Bytes()
+	errString := *(*string)(unsafe.Pointer(&errBytes))
+	hyenaLogger.Println("to display " + shCmd + " log:")
+	hyenaLogger.Println(errString)
+
+	if err := cmd.Wait(); err != nil {
+		hyenaLogger.Printf("Command finished with error: %v", err)
+		fmt.Fprintf(os.Stdout, "Command finished with error: %v", err)
+		fmt.Fprintln(os.Stdout, "")
+		fmt.Fprintln(os.Stdout, "Please see ~/.config/hyena/hyena.log")
+	} else {
+		hyenaLogger.Println("Command finished")
+		fmt.Fprintln(os.Stdout, "Command finished")
 	}
 }

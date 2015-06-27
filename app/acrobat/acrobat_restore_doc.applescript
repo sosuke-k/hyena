@@ -12,29 +12,6 @@ function acrobat_restore_doc(json_string) {
 }
 
 
-function fileReader(pathAsString) {
-  'use strict';
-
-  var app = Application.currentApplication();
-  app.includeStandardAdditions = true;
-  var path = Path(pathAsString);
-  var file = app.openForAccess(path);
-
-  var eof = app.getEof(file);
-
-  return {
-    read: function() {
-      return app.read(file, {
-        to: eof
-      });
-    },
-    close: function() {
-      app.closeAccess(file);
-    }
-  };
-}
-
-
 function run(argv) {
   try {
     var app = Application('Adobe Acrobat');
@@ -42,8 +19,8 @@ function run(argv) {
     console.log(e);
     return false;
   }
-
-  var reader = fileReader(argv);
+  fileIO = Library('fileIO');
+  var reader = fileIO.fileReader(argv);
   try {
     var data = reader.read();
   } catch (e) {

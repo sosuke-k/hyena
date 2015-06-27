@@ -14,34 +14,6 @@ function acrobat_get_docs_info() {
 }
 
 
-function fileWriter(pathAsString) {
-    'use strict';
-
-    var app = Application.currentApplication();
-    app.includeStandardAdditions = true;
-    var path = Path(pathAsString);
-    var file = app.openForAccess(path, {
-        writePermission: true
-    });
-
-    /* reset file length */
-    app.setEof(file, {
-        to: 0
-    });
-
-    return {
-        write: function(content) {
-            app.write(content, {
-                to: file,
-                as: 'text'
-            });
-        },
-        close: function() {
-            app.closeAccess(file);
-        }
-    };
-}
-
 function run(argv) {
     try {
       var app = Application('Adobe Acrobat');
@@ -49,8 +21,9 @@ function run(argv) {
       console.log(e);
       return false;
     }
+    fileIO = Library('fileIO');
     var data = acrobat_get_docs_info();
-    var exportFileWriter = fileWriter(argv);
+    var exportFileWriter = fileIO.fileWriter(argv);
     exportFileWriter.write(data);
     exportFileWriter.close();
 }

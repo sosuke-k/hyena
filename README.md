@@ -77,3 +77,4 @@ Use "hyena help [command]" for more information about that command.
 * Google Chrome
 * Adobe Acrobat
 * Kobito
+* Atom

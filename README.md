@@ -10,8 +10,31 @@
 ## Install
 
 ```
-go get github.com/sosuke-k/hyena
+go get -u github.com/sosuke-k/hyena
+hyena init
 ```
+
+
+## Tutorial
+
+1. Create your project.
+
+    ```sh
+    hyena add project_name
+    ```
+
+2. Save the current states of applications to your project.
+
+    ```sh
+    hyena save project_name
+    ```
+
+3. Restore the states of applications from your project.
+
+    ```sh
+    hyena restore project_name
+    ```
+
 
 ### Enable Completion for Bash
 

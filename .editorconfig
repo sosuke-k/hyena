@@ -20,5 +20,5 @@ indent_size = 8
 
 # JXA indendation
 [*.applescript]
-indent_style = spaces
+indent_style = space
 indent_size = 4

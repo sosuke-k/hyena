@@ -23,7 +23,5 @@ function run(argv) {
     }
     fileIO = Library('fileIO');
     var data = acrobat_get_docs_info();
-    var exportFileWriter = fileIO.fileWriter(argv);
-    exportFileWriter.write(data);
-    exportFileWriter.close();
+    fileIO.write(argv, data);
 }

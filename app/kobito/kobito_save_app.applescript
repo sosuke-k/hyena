@@ -32,7 +32,5 @@ function kobito_get_window_info() {
 function run(argv){
     fileIO = Library('fileIO');
     var activeWindows = kobito_get_window_info();
-    var exportFileWriter = fileIO.fileWriter(argv);
-    exportFileWriter.write(activeWindows);
-    exportFileWriter.close();
+    fileIO.write(argv, activeWindows);
 }

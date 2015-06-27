@@ -1,4 +1,4 @@
-function fileWriter(pathAsString) {
+function write(pathAsString, text) {
     'use strict';
 
     var app = Application.currentApplication();
@@ -13,20 +13,16 @@ function fileWriter(pathAsString) {
         to: 0
     });
 
-    return {
-        write: function(content) {
-            app.write(content, {
-                to: file,
-                as: 'text'
-            });
-        },
-        close: function() {
-            app.closeAccess(file);
-        }
-    };
+    app.write(text, {
+        to: file,
+        as: 'text'
+    });
+
+    app.closeAccess(file);
 }
 
-function fileReader(pathAsString) {
+
+function read(pathAsString) {
     'use strict';
 
     var app = Application.currentApplication();
@@ -36,14 +32,10 @@ function fileReader(pathAsString) {
 
     var eof = app.getEof(file);
 
-    return {
-        read: function() {
-            return app.read(file, {
-                to: eof
-            });
-        },
-        close: function() {
-            app.closeAccess(file);
-        }
-    };
+    var data = app.read(file, {
+        to: eof
+    });
+
+    app.closeAccess(file);
+    return data;
 }

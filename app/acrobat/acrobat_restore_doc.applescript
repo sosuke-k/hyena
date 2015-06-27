@@ -20,14 +20,11 @@ function run(argv) {
     return false;
   }
   fileIO = Library('fileIO');
-  var reader = fileIO.fileReader(argv);
   try {
-    var data = reader.read();
+    var data = fileIO.read(argv);
   } catch (e) {
     console.log(e);
     return false;
-  } finally {
-    reader.close();
   }
 
   acrobat_restore_doc(data);

@@ -44,9 +44,7 @@ function get_one_title(json_string) {
 
 function run(argv) {
   fileIO = Library('fileIO');
-  var reader = fileIO.fileReader(argv);
-  var data = reader.read();
-  reader.close();
+  var data = fileIO.read(argv);
 
   var title = get_one_title(data);
   if (title != "") {

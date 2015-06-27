@@ -26,16 +26,13 @@ function run(argv) {
       return false;
     }
     fileIO = Library('fileIO');
-    var reader = fileIO.fileReader(argv);
     var data = null;
     try {
-      data = reader.read();
+      data = fileIO.read(argv);
     } catch (e) {
       console.log(e);
       return false;
-    } finally {
-      reader.close();
-    }
+    } 
 
     restore_atom_windows(data);
 }

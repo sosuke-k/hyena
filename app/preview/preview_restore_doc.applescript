@@ -21,9 +21,7 @@ function preview_restore_doc(json_string){
 
 function run(argv) {
     fileIO = Library('fileIO');
-    var reader = fileIO.fileReader(argv);
-    var data = reader.read();
-    reader.close();
+    var data = fileIO.read(argv);
 
     preview_restore_doc(data);
 }

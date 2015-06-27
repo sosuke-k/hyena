@@ -20,7 +20,5 @@ function chrome_get_tab_info() {
 function run(argv) {
     fileIO = Library('fileIO');
     var data = chrome_get_tab_info();
-    var exportFileWriter = fileIO.fileWriter(argv);
-    exportFileWriter.write(data);
-    exportFileWriter.close();
+    fileIO.write(argv, data);
 }

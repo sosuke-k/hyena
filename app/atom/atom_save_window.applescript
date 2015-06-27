@@ -30,7 +30,5 @@ function atom_get_window_info() {
 function run(argv) {
     fileIO = Library('fileIO');
     var activeWindows = atom_get_window_info();
-    var exportFileWriter = fileIO.fileWriter(argv);
-    exportFileWriter.write(activeWindows);
-    exportFileWriter.close();
+    fileIO.write(argv, activeWindows);
 }

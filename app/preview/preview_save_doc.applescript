@@ -22,7 +22,5 @@ function preview_get_docs_info(){
 function run(argv) {
     fileIO = Library('fileIO');
     var data = preview_get_docs_info();
-    var exportFileWriter = fileIO.fileWriter(argv);
-    exportFileWriter.write(data);
-    exportFileWriter.close();
+    fileIO.write(argv, data);
 }

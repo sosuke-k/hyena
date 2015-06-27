@@ -50,8 +50,10 @@ hyena restore your_first_project
         - `/usr/share/zsh/site-functions`
         - `/usr/share/zsh/x.y.z/functions` (x.y.z stands for the version)
 
-    2. Or, copy it somewhere (e.g. `~/hyena_completion.zsh`) and put the following line in the `~/.zshrc` file:
+    2. Or, copy it somewhere (e.g. `~/hyena_completion.zsh`) and put the following lines in the `~/.zshrc` file:
         ```sh
+        autoload -U compinit
+        compinit
         source /path/to/hyena_completion.zsh
         ```
 
@@ -86,3 +88,4 @@ Use "hyena help [command]" for more information about that command.
 * Google Chrome
 * Adobe Acrobat
 * Kobito
+* Atom

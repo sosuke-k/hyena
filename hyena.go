@@ -131,13 +131,18 @@ func main() {
 			Aliases: []string{"a"},
 			Usage:   "add the project",
 			Action: func(c *cli.Context) {
+				hyenaLogger := logger.GetInstance()
+				hyenaLogger.Println("to run add command")
 				name := c.Args().First()
 				if name == "" {
+					hyenaLogger.Println("scan empty as input")
 					println("please input project name")
 				} else {
+					hyenaLogger.Println("scan " + name + " as input")
 					pm.Add(configPath, name)
 					println("created new project named " + name)
 				}
+				hyenaLogger.Println("finished ls command")
 			},
 		}, // end add action definition
 		{

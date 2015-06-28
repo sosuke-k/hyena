@@ -77,8 +77,11 @@ func main() {
 	app.Name = "hyena"
 	app.Usage = "see help"
 	app.Action = func(c *cli.Context) {
+		hyenaLogger := logger.GetInstance()
+		hyenaLogger.Println("to run only hyena command")
 		println("This is the tool like hyena...")
 		println("to get more info, command 'hyena help'")
+		hyenaLogger.Println("finished hyena command")
 	}
 
 	app.Commands = []cli.Command{

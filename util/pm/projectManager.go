@@ -1,28 +1,30 @@
 package pm
 
 import (
-	"log"
 	"os"
 	"path"
 	"path/filepath"
 	"strconv"
 
 	"github.com/bitly/go-simplejson"
+	"github.com/sosuke-k/hyena/util/log"
 )
 
 // Init creates a config file and if a parent directory not exists, also creates it.
 func Init(configPath string) {
+	hyenaLogger := logger.GetInstance()
+	hyenaLogger.Println("to create config file " + configPath)
+	hyenaLogger.Println("even if already exists, overwride config file")
 	hyenaPath := filepath.Dir(configPath)
 	if err := os.MkdirAll(hyenaPath, 0777); err != nil {
-		log.Fatal(err)
+		hyenaLogger.Fatalln(err)
 	}
 	js := simplejson.New()
 	js.Set("length", 0)
 	js.Set("projects", simplejson.New())
 	w, err := os.Create(configPath)
 	if err != nil {
-		log.Fatal(err)
-		log.Fatal(configPath)
+		hyenaLogger.Fatalln(err)
 	}
 	defer w.Close()
 	o, _ := js.EncodePretty()
@@ -31,14 +33,16 @@ func Init(configPath string) {
 
 // Load returns the string array of projects' name by the path of config file
 func Load(configPath string) (projects []string) {
+	hyenaLogger := logger.GetInstance()
+	hyenaLogger.Println("to load projects list")
 
 	r, err := os.Open(configPath)
 	if err != nil {
-		log.Fatal(configPath + " is not found")
+		hyenaLogger.Println(configPath + " is not found")
 	} else {
 		js, err := simplejson.NewFromReader(r)
 		if err != nil {
-			log.Fatal("cannot read " + configPath)
+			hyenaLogger.Println("cannot read " + configPath)
 		} else {
 			length, _ := js.Get("length").Int()
 			for i := 0; i < length; i++ {
@@ -52,6 +56,8 @@ func Load(configPath string) (projects []string) {
 
 // Add adds a project to project list by the path of config file
 func Add(configPath string, newProject string) {
+	hyenaLogger := logger.GetInstance()
+	hyenaLogger.Println("to add " + newProject + " project")
 	projects := Load(configPath)
 	projects = append(projects, newProject)
 	js := simplejson.New()
@@ -64,8 +70,7 @@ func Add(configPath string, newProject string) {
 	js.Set("projects", projectJSON)
 	w, err := os.Create(configPath)
 	if err != nil {
-		log.Fatal(err)
-		log.Fatal(configPath)
+		hyenaLogger.Fatalln(err)
 	}
 	defer w.Close()
 	o, _ := js.EncodePretty()
@@ -74,6 +79,6 @@ func Add(configPath string, newProject string) {
 	hyenaPath := filepath.Dir(configPath)
 	projectDir := path.Join(hyenaPath, newProject)
 	if err := os.MkdirAll(projectDir, 0777); err != nil {
-		log.Fatal(err)
+		hyenaLogger.Fatalln(err)
 	}
 }

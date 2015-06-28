@@ -19,6 +19,7 @@ import (
 	"github.com/sosuke-k/hyena/app/chrome"
 	"github.com/sosuke-k/hyena/app/kobito"
 	"github.com/sosuke-k/hyena/util/jxa"
+	"github.com/sosuke-k/hyena/util/log"
 	"github.com/sosuke-k/hyena/util/pm"
 )
 
@@ -48,6 +49,10 @@ func init() {
 		hyenaPath = path.Join(usr.HomeDir, ".config/hyena")
 	}
 	configPath = path.Join(hyenaPath, "config.json")
+	hyenaLogger := logger.GetInstance()
+	hyenaLogger.Println("====================")
+	hyenaLogger.Println("  Starting hyena... ")
+	hyenaLogger.Println("====================")
 }
 
 func save(projectName string) {
@@ -72,8 +77,11 @@ func main() {
 	app.Name = "hyena"
 	app.Usage = "see help"
 	app.Action = func(c *cli.Context) {
+		hyenaLogger := logger.GetInstance()
+		hyenaLogger.Println("to run only hyena command")
 		println("This is the tool like hyena...")
 		println("to get more info, command 'hyena help'")
+		hyenaLogger.Println("finished hyena command")
 	}
 
 	app.Commands = []cli.Command{
@@ -82,21 +90,27 @@ func main() {
 			Aliases: []string{"i"},
 			Usage:   "initialize hyena",
 			Action: func(c *cli.Context) {
+				hyenaLogger := logger.GetInstance()
+				hyenaLogger.Println("to run init command")
 				println("Do you create " + configPath + " ? y/[n]")
 
 				scanner := bufio.NewScanner(os.Stdin)
 				scanner.Scan()
 				if err := scanner.Err(); err != nil {
-					println("reading standard input:", err)
+					hyenaLogger.Printf("reading standard input:: %v", err)
+					hyenaLogger.Println("")
 				}
 				a := scanner.Text()
 				if a == "y" {
+					hyenaLogger.Println("y input")
 					jxa.Compile()
 					pm.Init(configPath)
 					println("config file was created")
 				} else {
+					hyenaLogger.Println("not y input")
 					println("please input y")
 				}
+				hyenaLogger.Println("finished init command")
 			},
 		}, // end init action definition
 		{
@@ -104,12 +118,15 @@ func main() {
 			Aliases: []string{"l"},
 			Usage:   "show the list",
 			Action: func(c *cli.Context) {
+				hyenaLogger := logger.GetInstance()
+				hyenaLogger.Println("to run ls command")
 				projects = pm.Load(configPath)
 				projectString := ""
 				for _, v := range projects {
 					projectString += v + "\t"
 				}
 				fmt.Fprintln(os.Stdout, projectString)
+				hyenaLogger.Println("finished ls command")
 			},
 		}, // end ls action definition
 		{
@@ -117,13 +134,18 @@ func main() {
 			Aliases: []string{"a"},
 			Usage:   "add the project",
 			Action: func(c *cli.Context) {
+				hyenaLogger := logger.GetInstance()
+				hyenaLogger.Println("to run add command")
 				name := c.Args().First()
 				if name == "" {
+					hyenaLogger.Println("scan empty as input")
 					println("please input project name")
 				} else {
+					hyenaLogger.Println("scan " + name + " as input")
 					pm.Add(configPath, name)
 					println("created new project named " + name)
 				}
+				hyenaLogger.Println("finished add command")
 			},
 		}, // end add action definition
 		{
@@ -131,12 +153,17 @@ func main() {
 			Aliases: []string{"s"},
 			Usage:   "save the project",
 			Action: func(c *cli.Context) {
+				hyenaLogger := logger.GetInstance()
+				hyenaLogger.Println("to run save command")
 				name := c.Args().First()
 				if name == "" {
+					hyenaLogger.Println("scan empty as input")
 					println("please input project name")
 				} else {
+					hyenaLogger.Println("scan " + name + " as input")
 					save(name)
 				}
+				hyenaLogger.Println("finished save command")
 			},
 		}, // end save action definition
 		{
@@ -144,12 +171,17 @@ func main() {
 			Aliases: []string{"r"},
 			Usage:   "restore the project",
 			Action: func(c *cli.Context) {
+				hyenaLogger := logger.GetInstance()
+				hyenaLogger.Println("to run restore command")
 				name := c.Args().First()
 				if name == "" {
+					hyenaLogger.Println("scan empty as input")
 					println("please input project name")
 				} else {
+					hyenaLogger.Println("scan " + name + " as input")
 					restore(name)
 				}
+				hyenaLogger.Println("finished restore command")
 			},
 		}, // end restore action definition
 	}

@@ -54,7 +54,7 @@ func Execute(dir string, args []string) string {
 	if err := cmd.Start(); err != nil {
 		hyenaLogger.Fatalln(err)
 	}
-	fmt.Fprintln(os.Stdout, "Waiting for "+shCmd+" command to finish...")
+	fmt.Fprintln(os.Stdout, "waiting for "+shCmd+" command to finish...")
 
 	outBuf := new(bytes.Buffer)
 	outBuf.ReadFrom(stdout)
@@ -71,13 +71,13 @@ func Execute(dir string, args []string) string {
 	hyenaLogger.Println(errString)
 
 	if err := cmd.Wait(); err != nil {
-		hyenaLogger.Printf("Command finished with error: %v", err)
-		fmt.Fprintf(os.Stdout, "Command finished with error: %v", err)
+		hyenaLogger.Printf("command finished with error: %v", err)
+		fmt.Fprintf(os.Stdout, "command finished with error: %v", err)
 		fmt.Fprintln(os.Stdout, "")
-		fmt.Fprintln(os.Stdout, "Please see ~/.config/hyena/hyena.log")
+		fmt.Fprintln(os.Stdout, "please see ~/.config/hyena/hyena.log")
 	} else {
-		hyenaLogger.Println("Command finished")
-		fmt.Fprintln(os.Stdout, "Command finished")
+		hyenaLogger.Println("command finished")
+		fmt.Fprintln(os.Stdout, "command finished")
 	}
 
 	return outString

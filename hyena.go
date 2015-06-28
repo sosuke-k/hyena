@@ -85,21 +85,27 @@ func main() {
 			Aliases: []string{"i"},
 			Usage:   "initialize hyena",
 			Action: func(c *cli.Context) {
+				hyenaLogger := logger.GetInstance()
+				hyenaLogger.Println("to run init command")
 				println("Do you create " + configPath + " ? y/[n]")
 
 				scanner := bufio.NewScanner(os.Stdin)
 				scanner.Scan()
 				if err := scanner.Err(); err != nil {
-					println("reading standard input:", err)
+					hyenaLogger.Printf("reading standard input:: %v", err)
+					hyenaLogger.Println("")
 				}
 				a := scanner.Text()
 				if a == "y" {
+					hyenaLogger.Println("y input")
 					jxa.Compile()
 					pm.Init(configPath)
 					println("config file was created")
 				} else {
+					hyenaLogger.Println("not y input")
 					println("please input y")
 				}
+				hyenaLogger.Println("finished init command")
 			},
 		}, // end init action definition
 		{

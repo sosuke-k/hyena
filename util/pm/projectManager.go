@@ -8,21 +8,24 @@ import (
 	"strconv"
 
 	"github.com/bitly/go-simplejson"
+	"github.com/sosuke-k/hyena/util/log"
 )
 
 // Init creates a config file and if a parent directory not exists, also creates it.
 func Init(configPath string) {
+	hyenaLogger := logger.GetInstance()
+	hyenaLogger.Println("to create config file " + configPath)
+	hyenaLogger.Println("even if already exists, overwride config file")
 	hyenaPath := filepath.Dir(configPath)
 	if err := os.MkdirAll(hyenaPath, 0777); err != nil {
-		log.Fatal(err)
+		hyenaLogger.Fatalln(err)
 	}
 	js := simplejson.New()
 	js.Set("length", 0)
 	js.Set("projects", simplejson.New())
 	w, err := os.Create(configPath)
 	if err != nil {
-		log.Fatal(err)
-		log.Fatal(configPath)
+		hyenaLogger.Fatalln(err)
 	}
 	defer w.Close()
 	o, _ := js.EncodePretty()

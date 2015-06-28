@@ -20,10 +20,16 @@ function preview_restore_doc(json_string){
 
 
 function run(argv) {
+    try {
+      var app = Application('Preview');
+    } catch (e) {
+      console.log(e);
+      return false;
+    }
+
     fileIO = Library('fileIO');
     var data = fileIO.read(argv);
     if (!data) {
-      console.log(e);
       return false;
     }
 

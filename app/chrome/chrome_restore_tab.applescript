@@ -23,10 +23,16 @@ function chrome_restore_tabs(json_string) {
 
 
 function run(argv) {
+    try {
+      var app = Application('Google Chrome');
+    } catch (e) {
+      console.log(e);
+      return false;
+    }
+
     fileIO = Library('fileIO');
     var data = fileIO.read(argv);
     if (!data) {
-      console.log(e);
       return false;
     }
 

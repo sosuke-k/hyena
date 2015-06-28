@@ -16,24 +16,10 @@ import (
 func Check(identifier string) (isRunning bool) {
 	hyenaLogger := logger.GetInstance()
 	hyenaLogger.Println("to check whether " + identifier + " is running")
-	var (
-		cmdOut []byte
-		err    error
-	)
 	srcDir := path.Join(os.Getenv("GOPATH"), "src/github.com/sosuke-k/hyena/util/jxa")
 	fileName := "running_checker.applescript"
-	shCmd := "osascript"
 	args := []string{"-l", "JavaScript", fileName, identifier}
-	hyenaLogger.Println("to execete " + shCmd)
-	for i := range args {
-		hyenaLogger.Println("  " + args[i])
-	}
-	cmd := exec.Command(shCmd, args...)
-	cmd.Dir = srcDir
-	if cmdOut, err = cmd.Output(); err != nil {
-		hyenaLogger.Fatalln(err)
-	}
-	outString := string(cmdOut)
+	outString := Execute(srcDir, args)
 	if strings.Contains(outString, "true") {
 		isRunning = true
 		hyenaLogger.Println(identifier + " is running")
@@ -45,7 +31,7 @@ func Check(identifier string) (isRunning bool) {
 }
 
 // Execute executes osascript with args
-func Execute(dir string, args []string) {
+func Execute(dir string, args []string) string {
 	shCmd := "osascript"
 
 	hyenaLogger := logger.GetInstance()
@@ -61,25 +47,38 @@ func Execute(dir string, args []string) {
 	if err != nil {
 		hyenaLogger.Fatalln(err)
 	}
+	stdout, err := cmd.StdoutPipe()
+	if err != nil {
+		hyenaLogger.Fatalln(err)
+	}
 	if err := cmd.Start(); err != nil {
 		hyenaLogger.Fatalln(err)
 	}
-	fmt.Fprintln(os.Stdout, "Waiting for "+shCmd+" command to finish...")
+	fmt.Fprintln(os.Stdout, "waiting for "+shCmd+" command to finish...")
+
+	outBuf := new(bytes.Buffer)
+	outBuf.ReadFrom(stdout)
+	outBytes := outBuf.Bytes()
+	outString := *(*string)(unsafe.Pointer(&outBytes))
+	hyenaLogger.Println("to display " + shCmd + " stdout:")
+	hyenaLogger.Println(outString)
 
 	errBuf := new(bytes.Buffer)
 	errBuf.ReadFrom(stderr)
 	errBytes := errBuf.Bytes()
 	errString := *(*string)(unsafe.Pointer(&errBytes))
-	hyenaLogger.Println("to display " + shCmd + " log:")
+	hyenaLogger.Println("to display " + shCmd + " stderr:")
 	hyenaLogger.Println(errString)
 
 	if err := cmd.Wait(); err != nil {
-		hyenaLogger.Printf("Command finished with error: %v", err)
-		fmt.Fprintf(os.Stdout, "Command finished with error: %v", err)
+		hyenaLogger.Printf("command finished with error: %v", err)
+		fmt.Fprintf(os.Stdout, "command finished with error: %v", err)
 		fmt.Fprintln(os.Stdout, "")
-		fmt.Fprintln(os.Stdout, "Please see ~/.config/hyena/hyena.log")
+		fmt.Fprintln(os.Stdout, "please see ~/.config/hyena/hyena.log")
 	} else {
-		hyenaLogger.Println("Command finished")
-		fmt.Fprintln(os.Stdout, "Command finished")
+		hyenaLogger.Println("command finished")
+		fmt.Fprintln(os.Stdout, "command finished")
 	}
+
+	return outString
 }

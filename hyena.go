@@ -50,7 +50,9 @@ func init() {
 	}
 	configPath = path.Join(hyenaPath, "config.json")
 	hyenaLogger := logger.GetInstance()
-	hyenaLogger.Println("Starting hyena...")
+	hyenaLogger.Println("====================")
+	hyenaLogger.Println("  Starting hyena... ")
+	hyenaLogger.Println("====================")
 }
 
 func save(projectName string) {

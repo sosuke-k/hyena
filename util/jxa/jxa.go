@@ -45,7 +45,7 @@ func Check(identifier string) (isRunning bool) {
 }
 
 // Execute executes osascript with args
-func Execute(dir string, args []string) {
+func Execute(dir string, args []string) string {
 	shCmd := "osascript"
 
 	hyenaLogger := logger.GetInstance()
@@ -93,4 +93,6 @@ func Execute(dir string, args []string) {
 		hyenaLogger.Println("Command finished")
 		fmt.Fprintln(os.Stdout, "Command finished")
 	}
+
+	return outString
 }

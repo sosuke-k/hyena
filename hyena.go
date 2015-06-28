@@ -142,7 +142,7 @@ func main() {
 					pm.Add(configPath, name)
 					println("created new project named " + name)
 				}
-				hyenaLogger.Println("finished ls command")
+				hyenaLogger.Println("finished add command")
 			},
 		}, // end add action definition
 		{

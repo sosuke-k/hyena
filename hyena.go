@@ -150,12 +150,17 @@ func main() {
 			Aliases: []string{"s"},
 			Usage:   "save the project",
 			Action: func(c *cli.Context) {
+				hyenaLogger := logger.GetInstance()
+				hyenaLogger.Println("to run save command")
 				name := c.Args().First()
 				if name == "" {
+					hyenaLogger.Println("scan empty as input")
 					println("please input project name")
 				} else {
+					hyenaLogger.Println("scan " + name + " as input")
 					save(name)
 				}
+				hyenaLogger.Println("finished save command")
 			},
 		}, // end save action definition
 		{
@@ -163,12 +168,17 @@ func main() {
 			Aliases: []string{"r"},
 			Usage:   "restore the project",
 			Action: func(c *cli.Context) {
+				hyenaLogger := logger.GetInstance()
+				hyenaLogger.Println("to run restore command")
 				name := c.Args().First()
 				if name == "" {
+					hyenaLogger.Println("scan empty as input")
 					println("please input project name")
 				} else {
+					hyenaLogger.Println("scan " + name + " as input")
 					restore(name)
 				}
+				hyenaLogger.Println("finished restore command")
 			},
 		}, // end restore action definition
 	}

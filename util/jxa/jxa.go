@@ -14,27 +14,32 @@ import (
 
 // Check checks if the application of identifier is running
 func Check(identifier string) (isRunning bool) {
+	hyenaLogger := logger.GetInstance()
+	hyenaLogger.Println("to check whether " + identifier + " is running")
 	var (
 		cmdOut []byte
 		err    error
 	)
-	srcDir := path.Join(os.Getenv("GOPATH"), "src/github.com/sosuke-k/hyena")
-	srcPath := path.Join(srcDir, "util/jxa/running_checker.applescript")
+	srcDir := path.Join(os.Getenv("GOPATH"), "src/github.com/sosuke-k/hyena/util/jxa")
+	fileName := "running_checker.applescript"
 	shCmd := "osascript"
-	args := []string{"-l", "JavaScript", srcPath, identifier}
-	if cmdOut, err = exec.Command(shCmd, args...).Output(); err != nil {
-		fmt.Println(shCmd)
-		for i := range args {
-			fmt.Println("  " + args[i])
-		}
-		fmt.Fprintln(os.Stderr, err)
-		os.Exit(1)
+	args := []string{"-l", "JavaScript", fileName, identifier}
+	hyenaLogger.Println("to execete " + shCmd)
+	for i := range args {
+		hyenaLogger.Println("  " + args[i])
+	}
+	cmd := exec.Command(shCmd, args...)
+	cmd.Dir = srcDir
+	if cmdOut, err = cmd.Output(); err != nil {
+		hyenaLogger.Fatalln(err)
 	}
 	outString := string(cmdOut)
 	if strings.Contains(outString, "true") {
 		isRunning = true
+		hyenaLogger.Println(identifier + " is running")
 	} else {
 		isRunning = false
+		hyenaLogger.Println(identifier + " is not running")
 	}
 	return
 }

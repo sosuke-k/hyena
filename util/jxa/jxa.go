@@ -1,7 +1,6 @@
 package jxa
 
 import (
-	"fmt"
 	"os"
 	"path"
 	"strings"
@@ -29,13 +28,6 @@ func Check(identifier string) (isRunning bool) {
 }
 
 // Execute executes osascript with args
-func Execute(dir string, args []string) (outString string) {
-	shCmd := "osascript"
-
-	fmt.Fprintln(os.Stdout, "to execete "+shCmd+" "+args[2])
-	fmt.Fprintln(os.Stdout, "waiting for "+shCmd+" command to finish...")
-
-	outString = sh.Execute(dir, shCmd, args)
-
-	return outString
+func Execute(dir string, args []string) string {
+	return sh.Execute(dir, "osascript", args)
 }

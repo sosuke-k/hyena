@@ -12,7 +12,7 @@ function chrome_get_tab_info() {
             res[i].push(w.tabs[j].url());
         }
     }
-    var s = JSON.stringify(res);
+    var s = JSON.stringify(res, null, 2);
     return s;
 }
 

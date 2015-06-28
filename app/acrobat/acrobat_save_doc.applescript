@@ -9,7 +9,7 @@ function acrobat_get_docs_info() {
     d = app.documents[i];
     res[0].push(d.fileAlias().toString());
   }
-  var s = JSON.stringify(res);
+  var s = JSON.stringify(res, null, 2);
   return s;
 }
 

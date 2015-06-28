@@ -18,7 +18,7 @@ function atom_get_window_info() {
         var info = windowItems[i].name().split(" - ");
         //e.g. sample.txt - /Users/name/Desktop - Atom
         //e.g. /Users/name/Desktop - Atom
-        var dir = info[info.length-2];
+        var dir = info[info.length - 2];
         res[0].push(dir);
         i--;
     }

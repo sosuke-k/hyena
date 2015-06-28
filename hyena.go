@@ -18,6 +18,7 @@ import (
 	"github.com/sosuke-k/hyena/app/atom"
 	"github.com/sosuke-k/hyena/app/chrome"
 	"github.com/sosuke-k/hyena/app/kobito"
+	"github.com/sosuke-k/hyena/util/git"
 	"github.com/sosuke-k/hyena/util/jxa"
 	"github.com/sosuke-k/hyena/util/log"
 	"github.com/sosuke-k/hyena/util/pm"
@@ -61,6 +62,7 @@ func save(projectName string) {
 	acrobat.Save(path.Join(projectPath, "acrobat.json"))
 	kobito.Save(path.Join(projectPath, "kobito.json"))
 	atom.Save(path.Join(projectPath, "atom.json"))
+	git.Commit(projectPath, "hyena auto git commit")
 }
 
 func restore(projectName string) {
@@ -144,6 +146,7 @@ func main() {
 					hyenaLogger.Println("scan " + name + " as input")
 					pm.Add(configPath, name)
 					println("created new project named " + name)
+					git.Init(path.Join(hyenaPath, name))
 				}
 				hyenaLogger.Println("finished add command")
 			},

@@ -22,7 +22,7 @@ function atom_get_window_info() {
         res[0].push(dir);
         i--;
     }
-    var data = JSON.stringify(res);
+    var data = JSON.stringify(res, null, 2);
     return data;
 }
 

@@ -24,7 +24,7 @@ function kobito_get_window_info() {
         res[0].push(windowItems[i].name());
         i--;
     }
-    var data = JSON.stringify(res);
+    var data = JSON.stringify(res, null, 2);
     return data;
 }
 

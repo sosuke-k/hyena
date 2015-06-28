@@ -14,7 +14,7 @@ function preview_get_docs_info(){
         // }
 
     }
-    var data = JSON.stringify(res);
+    var data = JSON.stringify(res, null, 2);
     return data;
 }
 

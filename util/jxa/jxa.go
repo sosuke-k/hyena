@@ -31,3 +31,23 @@ func Check(identifier string) (isRunning bool) {
 func Execute(dir string, args []string) string {
 	return sh.Execute(dir, "osascript", args)
 }
+
+// Compile compile fileIO.js and move it to lib folder
+func Compile() {
+	hyenaLogger := logger.GetInstance()
+	hyenaLogger.Println("to compile hyena jxa library and put it to applescript library folder")
+
+	libDir := path.Join(os.Getenv("HOME"), "Library/Script Libraries")
+	if err := os.MkdirAll(libDir, 0777); err != nil {
+		hyenaLogger.Fatalln(err)
+	}
+	libPath := path.Join(libDir, "fileIO.scpt") //i.e. "~/Library/Script Libraries/jsonIO.scpt"
+	srcDir := path.Join(os.Getenv("GOPATH"), "src/github.com/sosuke-k/hyena/util/jxa")
+	fileName := "util/jxa/fileIO.js"
+	shCmd := "osacompile"
+	args := []string{"-l", "JavaScript", "-o", libPath, fileName}
+
+	sh.Execute(srcDir, shCmd, args)
+
+	hyenaLogger.Println("finished compiling and putting it there")
+}

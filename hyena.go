@@ -3,15 +3,12 @@ package main
 import (
 	"bufio"
 	"fmt"
-	"html/template"
 	"log"
-	"net/http"
 	"os"
 	"os/user"
 	"path"
 
 	"github.com/codegangsta/cli"
-	"github.com/gorilla/mux"
 	"github.com/sosuke-k/hyena/app/acrobat"
 	"github.com/sosuke-k/hyena/app/atom"
 	"github.com/sosuke-k/hyena/app/chrome"
@@ -20,6 +17,7 @@ import (
 	"github.com/sosuke-k/hyena/util/jxa"
 	"github.com/sosuke-k/hyena/util/log"
 	"github.com/sosuke-k/hyena/util/pm"
+	"github.com/sosuke-k/hyena/util/server"
 	"github.com/sosuke-k/hyena/util/sh"
 )
 
@@ -141,46 +139,13 @@ func hyenaRestore(c *cli.Context) {
 	hyenaLogger.Println("finished restore command")
 }
 
-// Page strcut
-type Page struct {
-	Projects []string
-}
-
-func homeHandler(w http.ResponseWriter, r *http.Request) {
-	root := path.Join(os.Getenv("GOPATH"), "src/github.com/sosuke-k/hyena/root")
-	templatePath := path.Join(root, "index.html")
-	tmpl, err := template.ParseFiles(templatePath)
-	if err != nil {
-		panic(err)
-	}
-
-	projects := pm.Load(configPath)
-	page := Page{Projects: projects}
-	err = tmpl.Execute(w, page)
-	if err != nil {
-		panic(err)
-	}
-}
-
-func projectHandler(w http.ResponseWriter, r *http.Request) {
-	params := mux.Vars(r)
-	name := params["name"]
-	w.Write([]byte("Here is " + name + " project page."))
-}
-
 func hyenaBrowser(c *cli.Context) {
 	hyenaLogger := logger.GetInstance()
 	hyenaLogger.Println("to run browser command")
 	fmt.Fprintln(os.Stdout, "to run browser command")
 
 	sh.Execute(os.Getenv("HOME"), "open", []string{"http://localhost:8080"})
-
-	rtr := mux.NewRouter()
-	rtr.HandleFunc("/", homeHandler)
-	rtr.HandleFunc("/project/{name:[a-z]+}", projectHandler)
-
-	http.Handle("/", rtr)
-	http.ListenAndServe(":8080", nil)
+	server.Listen()
 
 	hyenaLogger.Println("finished browser command")
 	fmt.Fprintln(os.Stdout, "finished browser command")

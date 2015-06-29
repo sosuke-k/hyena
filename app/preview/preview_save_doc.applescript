@@ -1,11 +1,11 @@
 #!/usr/bin/env osascript -l JavaScript
 
-function preview_get_docs_info(){
+function preview_get_docs_info() {
     app = Application('Preview');
     var res = {};
     res[0] = [];
     for (i = 0; i < app.documents().length; i++) { // multiple windows
-        doc =  app.documents()[i];
+        doc = app.documents()[i];
         docPath = doc.path();
         res[0].push(docPath);
 

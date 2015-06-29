@@ -7,10 +7,10 @@ function kobito_get_window_info() {
     var kobitoProcess = systemEvent.processes.byName('Kobito');
     var windowMenu = kobitoProcess.menuBars[0].menuBarItems.byName('Window');
     try {
-      console.log(windowMenu.menus[0].menuItems.length);
+        console.log(windowMenu.menus[0].menuItems.length);
     } catch (e) {
-      console.log(e);
-      windowMenu = kobitoProcess.menuBars[0].menuBarItems.byName('ウィンドウ');
+        console.log(e);
+        windowMenu = kobitoProcess.menuBars[0].menuBarItems.byName('ウィンドウ');
     }
     var windowItems = windowMenu.menus[0].menuItems;
     var res = {};
@@ -29,7 +29,7 @@ function kobito_get_window_info() {
 }
 
 
-function run(argv){
+function run(argv) {
     fileIO = Library('fileIO');
     var activeWindows = kobito_get_window_info();
     fileIO.write(argv, activeWindows);

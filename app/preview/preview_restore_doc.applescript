@@ -1,11 +1,11 @@
 #!/usr/bin/env osascript -l JavaScript
 
-function preview_restore_doc(json_string){
+function preview_restore_doc(json_string) {
     app = Application.currentApplication();
     app.includeStandardAdditions = true;
     var data = JSON.parse(json_string);
 
-    for (i = 0; i < data[0].length; i++){
+    for (i = 0; i < data[0].length; i++) {
         app.doShellScript("open -a Preview.app " + data[0][i]);
 
         // var docInfo = app.document({
@@ -21,16 +21,16 @@ function preview_restore_doc(json_string){
 
 function run(argv) {
     try {
-      var app = Application('Preview');
+        var app = Application('Preview');
     } catch (e) {
-      console.log(e);
-      return false;
+        console.log(e);
+        return false;
     }
 
     fileIO = Library('fileIO');
     var data = fileIO.read(argv);
     if (!data) {
-      return false;
+        return false;
     }
 
     preview_restore_doc(data);

@@ -9,7 +9,7 @@ Exclusively for Mac OSX 10.10 or later.
 ## Supported Applications
 
 * [Google Chrome](https://www.google.com/chrome/browser/desktop/index.html)
-* [Adobe Acrobat](https://acrobat.adobe.com/jp/ja/acrobat.html)
+* [Adobe Acrobat](https://acrobat.adobe.com/us/en/acrobat.html)
 * [Kobito](http://kobito.qiita.com/)
 * [Atom](https://atom.io/)
 

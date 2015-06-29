@@ -13,6 +13,10 @@ func Commit(dir string, msg string) {
 	execute(dir, []string{"commit", "-m", msg})
 }
 
-func execute(dir string, args []string) {
-	sh.Execute(dir, "git", args)
+func Log(dir string) string {
+	return execute(dir, []string{"log"})
+}
+
+func execute(dir string, args []string) string {
+	return sh.Execute(dir, "git", args)
 }

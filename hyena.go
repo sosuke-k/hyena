@@ -3,6 +3,7 @@ package main
 import (
 	"bufio"
 	"fmt"
+	"html/template"
 	"log"
 	"net/http"
 	"os"
@@ -10,6 +11,7 @@ import (
 	"path"
 
 	"github.com/codegangsta/cli"
+	"github.com/gorilla/mux"
 	"github.com/sosuke-k/hyena/app/acrobat"
 	"github.com/sosuke-k/hyena/app/atom"
 	"github.com/sosuke-k/hyena/app/chrome"
@@ -139,8 +141,31 @@ func hyenaRestore(c *cli.Context) {
 	hyenaLogger.Println("finished restore command")
 }
 
-func handler(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, "Hello, World")
+// Page strcut
+type Page struct {
+	Projects []string
+}
+
+func homeHandler(w http.ResponseWriter, r *http.Request) {
+	root := path.Join(os.Getenv("GOPATH"), "src/github.com/sosuke-k/hyena/root")
+	templatePath := path.Join(root, "index.html")
+	tmpl, err := template.ParseFiles(templatePath)
+	if err != nil {
+		panic(err)
+	}
+
+	projects := pm.Load(configPath)
+	page := Page{Projects: projects}
+	err = tmpl.Execute(w, page)
+	if err != nil {
+		panic(err)
+	}
+}
+
+func projectHandler(w http.ResponseWriter, r *http.Request) {
+	params := mux.Vars(r)
+	name := params["name"]
+	w.Write([]byte("Here is " + name + " project page."))
 }
 
 func hyenaBrowser(c *cli.Context) {
@@ -150,7 +175,11 @@ func hyenaBrowser(c *cli.Context) {
 
 	sh.Execute(os.Getenv("HOME"), "open", []string{"http://localhost:8080"})
 
-	http.HandleFunc("/", handler)
+	rtr := mux.NewRouter()
+	rtr.HandleFunc("/", homeHandler)
+	rtr.HandleFunc("/project/{name:[a-z]+}", projectHandler)
+
+	http.Handle("/", rtr)
 	http.ListenAndServe(":8080", nil)
 
 	hyenaLogger.Println("finished browser command")

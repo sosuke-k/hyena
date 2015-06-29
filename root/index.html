@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Hyena Project List</title>
+  </head>
+  <body>
+    {{ range $key, $value := .Projects }}
+      <li><a href="/project/{{ $value }}">{{ $value }}</a></li>
+    {{ end }}
+  </body>
+</html>

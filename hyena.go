@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"fmt"
 	"log"
+	"net/http"
 	"os"
 	"os/user"
 	"path"
@@ -17,6 +18,7 @@ import (
 	"github.com/sosuke-k/hyena/util/jxa"
 	"github.com/sosuke-k/hyena/util/log"
 	"github.com/sosuke-k/hyena/util/pm"
+	"github.com/sosuke-k/hyena/util/sh"
 )
 
 var hyenaPath string  //e.g. 'Users/name/.config/hyena'
@@ -137,11 +139,22 @@ func hyenaRestore(c *cli.Context) {
 	hyenaLogger.Println("finished restore command")
 }
 
+func handler(w http.ResponseWriter, r *http.Request) {
+	fmt.Fprintf(w, "Hello, World")
+}
+
 func hyenaBrowser(c *cli.Context) {
 	hyenaLogger := logger.GetInstance()
 	hyenaLogger.Println("to run browser command")
+	fmt.Fprintln(os.Stdout, "to run browser command")
+
+	sh.Execute(os.Getenv("HOME"), "open", []string{"http://localhost:8080"})
+
+	http.HandleFunc("/", handler)
+	http.ListenAndServe(":8080", nil)
 
 	hyenaLogger.Println("finished browser command")
+	fmt.Fprintln(os.Stdout, "finished browser command")
 }
 
 func main() {

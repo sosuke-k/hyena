@@ -1,11 +1,22 @@
 ## hyena
 
+A command line tool to save & restore your active Apps
+
+Exclusively for Mac OSX 10.10 or later.
+
 ![hyena demo gif](https://raw.githubusercontent.com/sosuke-k/hyena/master/hyena.gif "hyena demo")
+
+## Supported Applications
+
+* [Google Chrome](https://www.google.com/chrome/browser/desktop/index.html)
+* [Adobe Acrobat](https://acrobat.adobe.com/us/en/acrobat.html)
+* [Kobito](http://kobito.qiita.com/)
+* [Atom](https://atom.io/)
 
 ## Dependencies
 
-* go
-* kobito-cli
+* [go](https://golang.org/)
+* [kobito-cli](https://github.com/suin/kobito-cli)
 
 ## Install
 
@@ -94,10 +105,3 @@ Use "hyena help [command]" for more information about that command.
 ```
 
 </usage>
-
-## Support Application
-
-* Google Chrome
-* Adobe Acrobat
-* Kobito
-* Atom

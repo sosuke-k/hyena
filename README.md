@@ -8,15 +8,15 @@ Exclusively for Mac OSX 10.10 or later.
 
 ## Supported Applications
 
-* Google Chrome
-* Adobe Acrobat
-* Kobito
-* Atom
+* [Google Chrome](https://www.google.com/chrome/browser/desktop/index.html)
+* [Adobe Acrobat](https://acrobat.adobe.com/jp/ja/acrobat.html)
+* [Kobito](http://kobito.qiita.com/)
+* [Atom](https://atom.io/)
 
 ## Dependencies
 
-* go
-* kobito-cli
+* [go](https://golang.org/)
+* [kobito-cli](https://github.com/suin/kobito-cli)
 
 ## Install
 

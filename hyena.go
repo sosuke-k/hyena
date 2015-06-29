@@ -137,6 +137,13 @@ func hyenaRestore(c *cli.Context) {
 	hyenaLogger.Println("finished restore command")
 }
 
+func hyenaBrowser(c *cli.Context) {
+	hyenaLogger := logger.GetInstance()
+	hyenaLogger.Println("to run browser command")
+
+	hyenaLogger.Println("finished browser command")
+}
+
 func main() {
 	app := cli.NewApp()
 	app.Name = "hyena"
@@ -175,6 +182,11 @@ func main() {
 			Aliases: []string{"r"},
 			Usage:   "restore the project",
 			Action:  hyenaRestore,
+		}, {
+			Name:    "browser",
+			Aliases: []string{"b"},
+			Usage:   "browsing project history",
+			Action:  hyenaBrowser,
 		},
 	}
 

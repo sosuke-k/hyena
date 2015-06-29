@@ -50,11 +50,11 @@ func projectHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 // Listen start web app
-func Listen() {
+func Listen(port string) {
 	rtr := mux.NewRouter()
 	rtr.HandleFunc("/", homeHandler)
 	rtr.HandleFunc("/project/{name:[a-z]+}", projectHandler)
 
 	http.Handle("/", rtr)
-	http.ListenAndServe(":8080", nil)
+	http.ListenAndServe(":"+port, nil)
 }

@@ -62,3 +62,18 @@ func projectListAPIHandler(w http.ResponseWriter, r *http.Request) {
 		panic(err)
 	}
 }
+
+func projectDiffAPIHandler(w http.ResponseWriter, r *http.Request) {
+	params := mux.Vars(r)
+	name := params["name"]
+	newCommit := params["newCommit"]
+	oldCommit := params["oldCommit"]
+	projectDir := path.Join(getHyenaPath(), name)
+	diffString := git.Diff(projectDir, oldCommit, newCommit)
+
+	if diffString == "" {
+		diffString = "this project is not initialized or these commit not exist"
+	}
+
+	w.Write([]byte(diffString))
+}

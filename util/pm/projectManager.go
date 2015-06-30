@@ -5,10 +5,21 @@ import (
 	"path"
 	"path/filepath"
 	"strconv"
+	"time"
 
 	"github.com/bitly/go-simplejson"
 	"github.com/sosuke-k/hyena/util/log"
 )
+
+// Project struct
+type Project struct {
+	Name      string    `json:"name"`
+	Completed bool      `json:"completed"`
+	Due       time.Time `json:"due"`
+}
+
+// Projects is Project slice
+type Projects []Project
 
 // Init creates a config file and if a parent directory not exists, also creates it.
 func Init(configPath string) {

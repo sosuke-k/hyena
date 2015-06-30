@@ -7,7 +7,6 @@ import (
 	"os"
 	"path"
 	"text/template"
-	"time"
 
 	"github.com/gorilla/mux"
 	"github.com/sosuke-k/hyena/util/git"
@@ -52,22 +51,12 @@ func projectHandler(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte(logString))
 }
 
-// Project struct
-type Project struct {
-	Name      string    `json:"name"`
-	Completed bool      `json:"completed"`
-	Due       time.Time `json:"due"`
-}
-
-// Projects is Project slice
-type Projects []Project
-
 func projectListAPIHandler(w http.ResponseWriter, r *http.Request) {
-	projects := Projects{}
+	projects := pm.Projects{}
 	projectList := pm.Load(path.Join(getHyenaPath(), "config.json"))
 
 	for _, name := range projectList {
-		projects = append(projects, Project{Name: name})
+		projects = append(projects, pm.Project{Name: name})
 	}
 
 	json.NewEncoder(os.Stdout).Encode(projects)

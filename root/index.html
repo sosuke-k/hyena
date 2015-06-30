@@ -5,8 +5,8 @@
     <title>Hyena Project List</title>
   </head>
   <body>
-    {{ range $key, $value := .Projects }}
-      <li><a href="/project/{{ $value }}">{{ $value }}</a></li>
+    {{ range $_, $project := . }}
+      <li><a href="/project/{{ $project.Name }}">{{ $project.Name }}</a></li>
     {{ end }}
   </body>
 </html>

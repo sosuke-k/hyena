@@ -13,11 +13,6 @@ import (
 	"github.com/sosuke-k/hyena/util/pm"
 )
 
-// Page strcut
-type Page struct {
-	Projects []string
-}
-
 func homeHandler(w http.ResponseWriter, r *http.Request) {
 	root := path.Join(os.Getenv("GOPATH"), "src/github.com/sosuke-k/hyena/root")
 	templatePath := path.Join(root, "index.html")
@@ -26,11 +21,13 @@ func homeHandler(w http.ResponseWriter, r *http.Request) {
 		panic(err)
 	}
 
-	configPath := path.Join(getHyenaPath(), "config.json")
+	projects := pm.Projects{}
+	projectList := pm.Load(path.Join(getHyenaPath(), "config.json"))
+	for _, name := range projectList {
+		projects = append(projects, pm.Project{Name: name})
+	}
 
-	projects := pm.Load(configPath)
-	page := Page{Projects: projects}
-	err = tmpl.Execute(w, page)
+	err = tmpl.Execute(w, projects)
 	if err != nil {
 		panic(err)
 	}

@@ -44,4 +44,10 @@ var routes = Routes{
 		"/project/{name}",
 		projectHandler,
 	},
+	Route{
+		"ProjectsAPI",
+		"GET",
+		"/api/projects",
+		projectListAPIHandler,
+	},
 }

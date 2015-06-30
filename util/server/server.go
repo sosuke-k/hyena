@@ -22,10 +22,5 @@ func getHyenaPath() (hyenaPath string) {
 
 // Listen start web app
 func Listen(port string) {
-	// rtr := mux.NewRouter()
-	// rtr.HandleFunc("/", homeHandler)
-	// rtr.HandleFunc("/project/{name}", projectHandler)
-	//
-	// http.Handle("/", rtr)
 	http.ListenAndServe(":"+port, newRouter())
 }

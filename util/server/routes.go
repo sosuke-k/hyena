@@ -53,7 +53,7 @@ var routes = Routes{
 	Route{
 		"ProjectDiffAPI",
 		"GET",
-		"/api/project/diff/{name}/{oldCommit}/{newCommit}",
+		"/api/project/{name}/diff/{oldCommit}/{newCommit}",
 		projectDiffAPIHandler,
 	},
 }

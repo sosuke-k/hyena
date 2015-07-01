@@ -98,7 +98,7 @@ func save(projectName string) {
 	acrobat.Save(path.Join(projectPath, "acrobat.json"))
 	kobito.Save(path.Join(projectPath, "kobito.json"))
 	atom.Save(path.Join(projectPath, "atom.json"))
-	git.Commit(projectPath, "hyena auto git commit")
+	git.Commit(projectPath, "hyena save "+projectName, false)
 }
 
 func hyenaSave(c *cli.Context) {
@@ -121,6 +121,7 @@ func restore(projectName string) {
 	acrobat.Restore(path.Join(projectPath, "acrobat.json"))
 	kobito.Restore(path.Join(projectPath, "kobito.json"))
 	atom.Restore(path.Join(projectPath, "atom.json"))
+	git.Commit(projectPath, "hyena restore "+projectName, true)
 }
 
 func hyenaRestore(c *cli.Context) {

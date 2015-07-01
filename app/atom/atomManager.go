@@ -27,8 +27,8 @@ func execJXA(cmd string, disPath string) {
 	srcDir := path.Join(os.Getenv("GOPATH"), "src/github.com/sosuke-k/hyena/app/atom")
 	fileName := "atom_" + cmd + "_window.applescript"
 	args := []string{"-l", "JavaScript", fileName, disPath}
-	fmt.Fprintln(os.Stdout, "to execete osascript "+args[2])
-	fmt.Fprintln(os.Stdout, "waiting for osascript command to finish...")
+	fmt.Fprintln(os.Stdout, "Executing osascript "+args[2])
+	fmt.Fprintln(os.Stdout, "Waiting for the command to finish...")
 	jxa.Execute(srcDir, args)
-	fmt.Fprintln(os.Stdout, "finished osascript "+args[2])
+	fmt.Fprintln(os.Stdout, "Finished osascript "+args[2])
 }

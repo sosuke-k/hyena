@@ -1,6 +1,7 @@
 package server
 
 import (
+	"fmt"
 	"log"
 	"net/http"
 	"os"
@@ -22,5 +23,10 @@ func getHyenaPath() (hyenaPath string) {
 
 // Listen start web app
 func Listen(port string) {
-	http.ListenAndServe(":"+port, newRouter())
+	staticDir := path.Join(os.Getenv("GOPATH"), "src/github.com/sosuke-k/hyena/root/static")
+	fmt.Fprintln(os.Stdout, staticDir)
+	fs := http.FileServer(http.Dir(staticDir))
+	http.Handle("/", newRouter())
+	http.Handle("/static/", http.StripPrefix("/static/", fs))
+	http.ListenAndServe(":"+port, nil)
 }

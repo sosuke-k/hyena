@@ -14,8 +14,8 @@ import (
 )
 
 func homeHandler(w http.ResponseWriter, r *http.Request) {
-	root := path.Join(os.Getenv("GOPATH"), "src/github.com/sosuke-k/hyena/root")
-	templatePath := path.Join(root, "index.html")
+	templateDir := path.Join(os.Getenv("GOPATH"), "src/github.com/sosuke-k/hyena/root/templates")
+	templatePath := path.Join(templateDir, "index.html")
 	tmpl, err := template.ParseFiles(templatePath)
 	if err != nil {
 		panic(err)

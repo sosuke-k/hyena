@@ -17,6 +17,7 @@ Exclusively for Mac OSX 10.10 or later.
 
 * [go](https://golang.org/)
 * [kobito-cli](https://github.com/suin/kobito-cli)
+* [bower](http://bower.io/)
 
 ## Install
 

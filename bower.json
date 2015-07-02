@@ -1,0 +1,22 @@
+{
+  "name": "hyena",
+  "version": "0.0.0",
+  "homepage": "https://github.com/sosuke-k/hyena",
+  "authors": [
+    "sosuke-k <snoopies.drum@gmail.com>"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "paper-header-panel": "polymerelements/paper-header-panel#~1.0.2",
+    "paper-toolbar": "polymerelements/paper-toolbar#~1.0.2",
+    "paper-item": "polymerelements/paper-item#~1.0.1",
+    "paper-checkbox": "polymerelements/paper-checkbox#~1.0.3"
+  }
+}

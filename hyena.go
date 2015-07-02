@@ -57,7 +57,8 @@ func hyenaInit(c *cli.Context) {
 	if a == "y" {
 		hyenaLogger.Println("y input")
 		jxa.Compile()
-		sh.Execute(path.Join(os.Getenv("HOME")), "bower", []string{"install"})
+		srcDir := path.Join(os.Getenv("HOME"), "src/github.com/sosuke-k/hyena")
+		sh.Execute(srcDir, "bower", []string{"install"})
 		pm.Init(configPath)
 		println("config file was created")
 	} else {

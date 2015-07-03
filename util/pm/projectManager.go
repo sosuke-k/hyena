@@ -82,3 +82,32 @@ func Add(configPath string, newProject string) {
 		hyenaLogger.Fatalln(err)
 	}
 }
+
+// Delete deletes a project from project list by the path of config file
+func Delete(configPath string, targetProject string) {
+	hyenaLogger := logger.GetInstance()
+	hyenaLogger.Println("to delete " + targetProject + " project")
+
+	projects := Load(configPath)
+	for i, name := range projects {
+		if name == targetProject {
+			projects = append(projects[:i], projects[i+1:]...)
+			break
+		}
+	}
+
+	js := simplejson.New()
+	projectJSON := simplejson.New()
+	for i, v := range projects {
+		projectJSON.Set(strconv.Itoa(i), v)
+	}
+	js.Set("length", len(projects))
+	js.Set("projects", projectJSON)
+	w, err := os.Create(configPath)
+	if err != nil {
+		hyenaLogger.Fatalln(err)
+	}
+	defer w.Close()
+	o, _ := js.EncodePretty()
+	w.Write(o)
+}

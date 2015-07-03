@@ -88,11 +88,11 @@ func Delete(configPath string, targetProject string) {
 	hyenaLogger := logger.GetInstance()
 	hyenaLogger.Println("to delete " + targetProject + " project")
 
-	_projects := Load(configPath)
-	projects := []string{}
-	for _, name := range _projects {
-		if name != targetProject {
-			projects = append(projects, name)
+	projects := Load(configPath)
+	for i, name := range projects {
+		if name == targetProject {
+			projects = append(projects[:i], projects[i+1:]...)
+			break
 		}
 	}
 

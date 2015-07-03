@@ -76,38 +76,44 @@ func hyenaLs(c *cli.Context) {
 	hyenaLogger.Println("finished ls command")
 }
 
-func hyenaAdd(c *cli.Context) {
-	hyenaLogger := logger.GetInstance()
-	hyenaLogger.Println("to run add command")
+func hyenaExecWithProject(c *cli.Context) {
+	cmd := c.Command.Name
 	name := c.Args().First()
+	hyenaLogger := logger.GetInstance()
+	hyenaLogger.Println("to run " + cmd + " command")
 	if name == "" {
 		hyenaLogger.Println("scan empty as input")
 		println("please input project name")
 	} else {
 		hyenaLogger.Println("scan " + name + " as input")
-		pm.Add(configPath, name)
-		println("created new project named " + name)
-		git.Init(path.Join(hyenaPath, name))
+		switch cmd {
+		case "add":
+			hyenaAdd(name)
+		case "delete":
+			hyenaDelete(name)
+		case "save":
+			hyenaSave(name)
+		case "restore":
+			hyenaRestore(name)
+		default:
+			hyenaLogger.Println("cmd not apply any case")
+		}
 	}
-	hyenaLogger.Println("finished add command")
+	hyenaLogger.Println("finished " + cmd + " command")
 }
 
-func hyenaDelete(c *cli.Context) {
-	hyenaLogger := logger.GetInstance()
-	hyenaLogger.Println("to run delete command")
-	name := c.Args().First()
-	if name == "" {
-		hyenaLogger.Println("scan empty as input")
-		println("please input project name")
-	} else {
-		hyenaLogger.Println("scan " + name + " as input")
-		pm.Delete(configPath, name)
-		println("deleted the project named " + name)
-	}
-	hyenaLogger.Println("finished delete command")
+func hyenaAdd(name string) {
+	pm.Add(configPath, name)
+	git.Init(path.Join(hyenaPath, name))
+	println("created new project named " + name)
 }
 
-func save(projectName string) {
+func hyenaDelete(name string) {
+	pm.Delete(configPath, name)
+	println("deleted the project named " + name)
+}
+
+func hyenaSave(projectName string) {
 	projectPath := path.Join(hyenaPath, projectName)
 	chrome.Save(path.Join(projectPath, "chrome.json"))
 	acrobat.Save(path.Join(projectPath, "acrobat.json"))
@@ -116,40 +122,12 @@ func save(projectName string) {
 	git.Commit(projectPath, "hyena auto git commit")
 }
 
-func hyenaSave(c *cli.Context) {
-	hyenaLogger := logger.GetInstance()
-	hyenaLogger.Println("to run save command")
-	name := c.Args().First()
-	if name == "" {
-		hyenaLogger.Println("scan empty as input")
-		println("please input project name")
-	} else {
-		hyenaLogger.Println("scan " + name + " as input")
-		save(name)
-	}
-	hyenaLogger.Println("finished save command")
-}
-
-func restore(projectName string) {
+func hyenaRestore(projectName string) {
 	projectPath := path.Join(hyenaPath, projectName)
 	chrome.Restore(path.Join(projectPath, "chrome.json"))
 	acrobat.Restore(path.Join(projectPath, "acrobat.json"))
 	kobito.Restore(path.Join(projectPath, "kobito.json"))
 	atom.Restore(path.Join(projectPath, "atom.json"))
-}
-
-func hyenaRestore(c *cli.Context) {
-	hyenaLogger := logger.GetInstance()
-	hyenaLogger.Println("to run restore command")
-	name := c.Args().First()
-	if name == "" {
-		hyenaLogger.Println("scan empty as input")
-		println("please input project name")
-	} else {
-		hyenaLogger.Println("scan " + name + " as input")
-		restore(name)
-	}
-	hyenaLogger.Println("finished restore command")
 }
 
 func main() {
@@ -179,22 +157,22 @@ func main() {
 			Name:    "add",
 			Aliases: []string{"a"},
 			Usage:   "add the project",
-			Action:  hyenaAdd,
+			Action:  hyenaExecWithProject,
 		}, {
 			Name:    "delete",
 			Aliases: []string{"d"},
 			Usage:   "delete the project",
-			Action:  hyenaDelete,
+			Action:  hyenaExecWithProject,
 		}, {
 			Name:    "save",
 			Aliases: []string{"s"},
 			Usage:   "save the project",
-			Action:  hyenaSave,
+			Action:  hyenaExecWithProject,
 		}, {
 			Name:    "restore",
 			Aliases: []string{"r"},
 			Usage:   "restore the project",
-			Action:  hyenaRestore,
+			Action:  hyenaExecWithProject,
 		},
 	}
 

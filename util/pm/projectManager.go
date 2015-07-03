@@ -5,7 +5,6 @@ import (
 	"path"
 	"path/filepath"
 	"strconv"
-	"time"
 
 	"github.com/bitly/go-simplejson"
 	"github.com/sosuke-k/hyena/util/log"
@@ -13,9 +12,7 @@ import (
 
 // Project struct
 type Project struct {
-	Name      string    `json:"name"`
-	Completed bool      `json:"completed"`
-	Due       time.Time `json:"due"`
+	Name string `json:"name"`
 }
 
 // Projects is Project slice

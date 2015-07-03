@@ -100,6 +100,7 @@ Available Commands:
   delete [project name]                         Delete project from list
   save [project name]                           Save project
   restore [project name]                        Restore project
+  browser                                       Open hyena page with browser
   help [command]                                Help about any command
 
 

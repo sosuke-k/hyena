@@ -92,6 +92,21 @@ func hyenaAdd(c *cli.Context) {
 	hyenaLogger.Println("finished add command")
 }
 
+func hyenaDelete(c *cli.Context) {
+	hyenaLogger := logger.GetInstance()
+	hyenaLogger.Println("to run delete command")
+	name := c.Args().First()
+	if name == "" {
+		hyenaLogger.Println("scan empty as input")
+		println("please input project name")
+	} else {
+		hyenaLogger.Println("scan " + name + " as input")
+		pm.Delete(configPath, name)
+		println("deleted the project named " + name)
+	}
+	hyenaLogger.Println("finished delete command")
+}
+
 func save(projectName string) {
 	projectPath := path.Join(hyenaPath, projectName)
 	chrome.Save(path.Join(projectPath, "chrome.json"))
@@ -165,6 +180,11 @@ func main() {
 			Aliases: []string{"a"},
 			Usage:   "add the project",
 			Action:  hyenaAdd,
+		}, {
+			Name:    "delete",
+			Aliases: []string{"d"},
+			Usage:   "delete the project",
+			Action:  hyenaDelete,
 		}, {
 			Name:    "save",
 			Aliases: []string{"s"},

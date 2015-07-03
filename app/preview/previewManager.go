@@ -1,4 +1,4 @@
-package atom
+package preview
 
 import (
 	"fmt"
@@ -8,14 +8,14 @@ import (
 	"github.com/sosuke-k/hyena/util/jxa"
 )
 
-// Save saves atom windows info to the config file at disPath
+// Save saves Preview.app windows info to the config file at disPath
 func Save(disPath string) {
-	if jxa.Check("com.github.atom") {
+	if jxa.Check("com.apple.Preview") {
 		execJXA("save", disPath)
 	}
 }
 
-// Restore restores atom windows by the config file at disPath
+// Restore restores Preview.app windows by the config file at disPath
 func Restore(disPath string) {
 	execJXA("restore", disPath)
 }
@@ -24,8 +24,8 @@ func Restore(disPath string) {
  * the parent directory of disPath must exist
  */
 func execJXA(cmd string, disPath string) {
-	srcDir := path.Join(os.Getenv("GOPATH"), "src/github.com/sosuke-k/hyena/app/atom")
-	fileName := "atom_" + cmd + "_window.applescript"
+	srcDir := path.Join(os.Getenv("GOPATH"), "src/github.com/sosuke-k/hyena/app/preview")
+	fileName := "preview_" + cmd + "_doc.applescript"
 	args := []string{"-l", "JavaScript", fileName, disPath}
 	fmt.Fprintln(os.Stdout, "Executing osascript "+args[2])
 	fmt.Fprintln(os.Stdout, "Waiting for the command to finish...")

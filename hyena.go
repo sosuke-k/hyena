@@ -18,6 +18,8 @@ import (
 	"github.com/sosuke-k/hyena/util/jxa"
 	"github.com/sosuke-k/hyena/util/log"
 	"github.com/sosuke-k/hyena/util/pm"
+	"github.com/sosuke-k/hyena/util/server"
+	"github.com/sosuke-k/hyena/util/sh"
 )
 
 var hyenaPath string  //e.g. 'Users/name/.config/hyena'
@@ -56,6 +58,8 @@ func hyenaInit(c *cli.Context) {
 	if a == "y" {
 		hyenaLogger.Println("y input")
 		jxa.Compile()
+		srcDir := path.Join(os.Getenv("HOME"), "src/github.com/sosuke-k/hyena")
+		sh.Execute(srcDir, "bower", []string{"install"})
 		pm.Init(configPath)
 		println("config file was created")
 	} else {
@@ -134,6 +138,19 @@ func hyenaRestore(projectName string) {
 	git.Commit(projectPath, "hyena restore "+projectName, true)
 }
 
+func hyenaBrowser(c *cli.Context) {
+	hyenaLogger := logger.GetInstance()
+	hyenaLogger.Println("to run browser command")
+	fmt.Fprintln(os.Stdout, "to run browser command")
+
+	port := "8080"
+	sh.Execute(os.Getenv("HOME"), "open", []string{"http://localhost:" + port})
+	server.Listen(port)
+
+	hyenaLogger.Println("finished browser command")
+	fmt.Fprintln(os.Stdout, "finished browser command")
+}
+
 func main() {
 	app := cli.NewApp()
 	app.Name = "hyena"
@@ -177,6 +194,11 @@ func main() {
 			Aliases: []string{"r"},
 			Usage:   "restore the project",
 			Action:  hyenaExecWithProject,
+		}, {
+			Name:    "browser",
+			Aliases: []string{"b"},
+			Usage:   "browsing project history",
+			Action:  hyenaBrowser,
 		},
 	}
 

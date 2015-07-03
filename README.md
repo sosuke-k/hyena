@@ -17,6 +17,7 @@ Exclusively for Mac OSX 10.10 or later.
 
 * [go](https://golang.org/)
 * [kobito-cli](https://github.com/suin/kobito-cli)
+* [bower](http://bower.io/)
 
 ## Install
 
@@ -99,6 +100,7 @@ Available Commands:
   delete [project name]                         Delete project from list
   save [project name]                           Save project
   restore [project name]                        Restore project
+  browser                                       Open hyena page with browser
   help [command]                                Help about any command
 
 

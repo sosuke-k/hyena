@@ -17,6 +17,15 @@ func Commit(dir string, msg string, force bool) {
 	}
 }
 
-func execute(dir string, args []string) {
-	sh.Execute(dir, "git", args)
+func Log(dir string) string {
+	return execute(dir, []string{"log"})
+}
+
+// Diff return git diff oldCommit newCommit in dir
+func Diff(dir string, oldCommit string, newCommit string) string {
+	return execute(dir, []string{"diff", oldCommit, newCommit})
+}
+
+func execute(dir string, args []string) string {
+	return sh.Execute(dir, "git", args)
 }

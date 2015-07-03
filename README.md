@@ -96,6 +96,7 @@ Usage:
 Available Commands:
   ls                                            List all projects
   add [project name]                            Add project to list
+  delete [project name]                         Delete project from list
   save [project name]                           Save project
   restore [project name]                        Restore project
   help [command]                                Help about any command

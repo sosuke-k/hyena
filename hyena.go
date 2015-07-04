@@ -143,7 +143,7 @@ func hyenaBrowser(c *cli.Context) {
 	hyenaLogger.Println("to run browser command")
 	fmt.Fprintln(os.Stdout, "to run browser command")
 
-	port := "8080"
+	port := "8187"
 	sh.Execute(os.Getenv("HOME"), "open", []string{"http://localhost:" + port})
 	server.Listen(port)
 

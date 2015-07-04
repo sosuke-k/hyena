@@ -15,7 +15,8 @@ __hyena_modes(){
         'add[Add a new project]' \
         'delete[Delete a project]' \
         'save[Save current state to the project]' \
-        'restore[Restore project]'
+        'restore[Restore project]' \
+        'browser[Open hyena page with browser]'
 }
 
 __hyena_projects(){

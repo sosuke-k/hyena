@@ -10,6 +10,14 @@ import (
 	"github.com/sosuke-k/hyena/util/log"
 )
 
+// Project struct
+type Project struct {
+	Name string `json:"name"`
+}
+
+// Projects is Project slice
+type Projects []Project
+
 // Init creates a config file and if a parent directory not exists, also creates it.
 func Init(configPath string) {
 	hyenaLogger := logger.GetInstance()

@@ -58,8 +58,6 @@ func projectListAPIHandler(w http.ResponseWriter, r *http.Request) {
 		projects = append(projects, pm.Project{Name: name})
 	}
 
-	json.NewEncoder(os.Stdout).Encode(projects)
-
 	if err := json.NewEncoder(w).Encode(projects); err != nil {
 		panic(err)
 	}

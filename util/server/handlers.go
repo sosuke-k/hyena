@@ -36,18 +36,32 @@ func homeHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func projectHandler(w http.ResponseWriter, r *http.Request) {
-	params := mux.Vars(r)
-	name := params["name"]
+	hyenaLogger := logger.GetInstance()
+	methodURL := r.Method + " " + r.URL.String()
+	hyenaLogger.Println(methodURL)
+	fmt.Fprintln(os.Stdout, methodURL)
 
-	projectDir := path.Join(getHyenaPath(), name)
-	fmt.Println(projectDir)
-	logString := git.Log(projectDir)
+	// params := mux.Vars(r)
+	// name := params["name"]
 
-	if logString == "" {
-		logString = "this project is not initialized"
+	templateDir := path.Join(os.Getenv("GOPATH"), "src/github.com/sosuke-k/hyena/root/templates")
+	templatePath := path.Join(templateDir, "git_history_skrollr.html")
+	tmpl, err := template.ParseFiles(templatePath)
+	if err != nil {
+		hyenaLogger.Fatalln(err)
+		fmt.Fprintln(os.Stderr, err.Error())
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
 	}
 
-	w.Write([]byte(logString))
+	if err = tmpl.Execute(w, nil); err != nil {
+		hyenaLogger.Fatalln(err)
+		fmt.Fprintln(os.Stderr, err.Error())
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	hyenaLogger.Println("response wrote")
+	fmt.Fprintln(os.Stdout, "response wrote")
 }
 
 func projectListAPIHandler(w http.ResponseWriter, r *http.Request) {

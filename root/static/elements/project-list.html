@@ -18,8 +18,8 @@
         project: String
       },
       goLink: function() {
-        console.log(this.project);
-        window.location.href = "http://localhost:8080/project/" + this.project;
+        project_link = window.location.origin + "/project/" + this.project;
+        window.location.href = project_link;
       }
     });
   </script>

@@ -41,8 +41,11 @@ func projectHandler(w http.ResponseWriter, r *http.Request) {
 	hyenaLogger.Println(methodURL)
 	fmt.Fprintln(os.Stdout, methodURL)
 
-	// params := mux.Vars(r)
-	// name := params["name"]
+	params := mux.Vars(r)
+	name := params["name"]
+	projectDir := path.Join(getHyenaPath(), name)
+	logString := git.Log(projectDir)
+	logStruct := git.ParseLog(logString)
 
 	templateDir := path.Join(os.Getenv("GOPATH"), "src/github.com/sosuke-k/hyena/root/templates")
 	templatePath := path.Join(templateDir, "git_history_skrollr.html")
@@ -54,7 +57,7 @@ func projectHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if err = tmpl.Execute(w, nil); err != nil {
+	if err = tmpl.Execute(w, logStruct); err != nil {
 		hyenaLogger.Fatalln(err)
 		fmt.Fprintln(os.Stderr, err.Error())
 		http.Error(w, err.Error(), http.StatusInternalServerError)

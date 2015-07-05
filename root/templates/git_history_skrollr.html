@@ -12,6 +12,9 @@
 <body>
 <div id="fix_area">
   <ul>
+    {{ range $_, $commit := .Commits }}
+      <li>{{$commit.SHA}}</li>
+    {{ end }}
     <li data-0="opacity:0;display:none;" data-200="display:block;" data-400="opacity:1;" data-900="" data-4000="opacity:0;display:none;">item</li>
     <li data-0="opacity:0;display:none;" data-1200="display:block;" data-1400="opacity:1;" data-1900="" data-4000="opacity:0;display:none;">item</li>
     <li data-0="opacity:0;display:none;" data-2200="display:block;" data-2400="opacity:1;" data-2900="" data-4000="opacity:0;display:none;">item</li>

@@ -14,10 +14,30 @@ type LogStruct struct {
 
 // CommitStruct struct
 type CommitStruct struct {
-	SHA     string    `json:"sha"`
-	Author  string    `json:"author"`
-	Date    time.Time `json:"date"`
-	Message string    `json:"message"`
+	SHA     string           `json:"sha"`
+	Author  string           `json:"author"`
+	Date    time.Time        `json:"date"`
+	Message string           `json:"message"`
+	Diff    CommitDiffStruct `json:"diff"`
+}
+
+// CommitDiffStruct struct
+type CommitDiffStruct struct {
+	FileName string       `json:"file"`
+	Diffs    []DiffStruct `json:"diffs"`
+}
+
+// DiffStruct struct
+type DiffStruct struct {
+	Add    DiffInfoStruct `json:"add"`
+	Delete DiffInfoStruct `json:"delete"`
+}
+
+// DiffInfoStruct struct
+type DiffInfoStruct struct {
+	Start int      `json:"start"`
+	Sum   int      `json:"sum"`
+	Lines []string `json:"lines"`
 }
 
 // Init execute git init in dir

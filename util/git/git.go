@@ -1,6 +1,22 @@
 package git
 
-import "github.com/sosuke-k/hyena/util/sh"
+import (
+	"time"
+
+	"github.com/sosuke-k/hyena/util/sh"
+)
+
+// LogStruct struct
+type LogStruct struct {
+	Commits []CommitStruct `json:"commits"`
+}
+
+// CommitStruct struct
+type CommitStruct struct {
+	SHA     string    `json:"sha"`
+	Date    time.Time `json:"date"`
+	Message string    `json:"message"`
+}
 
 // Init execute git init in dir
 func Init(dir string) {

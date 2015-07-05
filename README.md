@@ -108,3 +108,7 @@ Use "hyena help [command]" for more information about that command.
 ```
 
 </usage>
+
+### Browsing
+
+![](http://i.gyazo.com/ba058eca867d68dbfccc9ddcd4665e61.gif)

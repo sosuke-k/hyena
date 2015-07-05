@@ -8,8 +8,10 @@ import (
 	"path"
 	"text/template"
 
+	"github.com/bitly/go-simplejson"
 	"github.com/gorilla/mux"
 	"github.com/sosuke-k/hyena/util/git"
+	"github.com/sosuke-k/hyena/util/log"
 	"github.com/sosuke-k/hyena/util/pm"
 )
 
@@ -56,11 +58,46 @@ func projectListAPIHandler(w http.ResponseWriter, r *http.Request) {
 		projects = append(projects, pm.Project{Name: name})
 	}
 
-	json.NewEncoder(os.Stdout).Encode(projects)
-
 	if err := json.NewEncoder(w).Encode(projects); err != nil {
 		panic(err)
 	}
+}
+
+// Result struct
+type Result struct {
+	Success bool `json:"success"`
+}
+
+func projectDeleteAPIHandler(w http.ResponseWriter, r *http.Request) {
+	hyenaLogger := logger.GetInstance()
+	methodURL := r.Method + " " + r.URL.String()
+	hyenaLogger.Println(methodURL)
+	fmt.Fprintln(os.Stdout, methodURL)
+
+	js, err := simplejson.NewFromReader(r.Body)
+	if err != nil {
+		hyenaLogger.Println("failed to convert body to json")
+		hyenaLogger.Fatalln(err)
+		fmt.Fprintln(os.Stderr, err.Error())
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	configPath := path.Join(getHyenaPath(), "config.json")
+	for _, name := range js.Get("checked_list").MustArray() {
+		pm.Delete(configPath, name.(string))
+	}
+	fmt.Fprintln(os.Stdout, "completed to delete")
+
+	resultJSON, err := json.Marshal(Result{Success: true})
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.Write(resultJSON)
+	hyenaLogger.Println("response write " + string(resultJSON[:]))
+	fmt.Fprintln(os.Stdout, "response write "+string(resultJSON[:]))
 }
 
 func projectDiffAPIHandler(w http.ResponseWriter, r *http.Request) {

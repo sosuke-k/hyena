@@ -23,9 +23,9 @@ func getHyenaPath() (hyenaPath string) {
 
 // Listen start web app
 func Listen(port string) {
-	staticDir := path.Join(os.Getenv("GOPATH"), "src/github.com/sosuke-k/hyena/root/static")
-	fmt.Fprintln(os.Stdout, staticDir)
-	fs := http.FileServer(http.Dir(staticDir))
+	rootDir := path.Join(os.Getenv("GOPATH"), "src/github.com/sosuke-k/hyena/root")
+	fmt.Fprintln(os.Stdout, "root folder is "+rootDir)
+	fs := http.FileServer(http.Dir(path.Join(rootDir, "static")))
 	http.Handle("/", newRouter())
 	http.Handle("/static/", http.StripPrefix("/static/", fs))
 	http.ListenAndServe(":"+port, nil)

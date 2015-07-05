@@ -1,0 +1,115 @@
+<link rel="import" href="/static/bower_components/polymer/polymer.html">
+<link rel="import" href="/static/bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="/static/bower_components/paper-item/paper-item.html">
+<link rel="import" href="/static/bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="/static/bower_components/paper-button/paper-button.html">
+<link rel="import" href="/static/bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="/static/bower_components/paper-checkbox/paper-checkbox.html">
+<link rel="import" href="/static/bower_components/paper-toast/paper-toast.html">
+
+<dom-module id="project-button">
+  <template>
+    <paper-button raised on-tap="goLink">{{project}}</paper-button>
+  </template>
+  <script>
+    Polymer({
+      is: "project-button",
+      properties: {
+        project: String
+      },
+      goLink: function() {
+        project_link = window.location.origin + "/project/" + this.project;
+        window.location.href = project_link;
+      }
+    });
+  </script>
+</dom-module>
+
+
+<dom-module id="project-list">
+  <style>
+    :host {
+      display: block;
+    }
+    
+    paper-item {
+      margin: 10px;
+    }
+    
+    paper-button {
+      margin: 0 30px;
+    }
+    
+    paper-icon-button {
+      margin: 0 5px;
+    }
+    
+    paper-checkbox {
+      margin: 0 15px;
+    }
+  </style>
+
+  <template>
+    <iron-ajax auto url="/api/projects" handle-as="json" on-response="handleResponse">
+    </iron-ajax>
+    <iron-ajax id="deleteAjax" method="POST" url="/api/project/delete/add_api_test" handle-as="json" on-response="deleteButtonResponse">
+    </iron-ajax>
+    <paper-item>
+      <paper-icon-button icon="delete" on-tap="pushDeleteButton"></paper-icon-button>
+      <paper-item-body>
+        <paper-button nolink>project name</paper-button>
+      </paper-item-body>
+    </paper-item>
+    <template is="dom-repeat" items="{{projects}}">
+      <paper-item role="menuitemcheckbox">
+        <paper-checkbox checked="{{item.checked}}"></paper-checkbox>
+        <project-button project="{{item.name}}">
+          {{item.name}}
+        </project-button>
+      </paper-item>
+    </template>
+    <paper-toast id="deleteToast" text="Deleted Projects"></paper-toast>
+  </template>
+
+  <script>
+    Polymer({
+      is: "project-list",
+      ready: function() {
+        this.projects = [];
+      },
+      handleResponse: function(e) {
+        _projects = e.detail.response;
+        for (var i = 0; i < _projects.length; i++) {
+          _projects[i]["checked"] = false;
+        }
+        this.projects = _projects;
+      },
+      pushDeleteButton: function(e) {
+        checked_list = [];
+        for (var i = 0; i < this.projects.length; i++) {
+          if (this.projects[i].checked) {
+            checked_list.push(this.projects[i].name);
+          }
+        }
+        this.$.deleteAjax.body = JSON.stringify({
+          "checked_list": checked_list
+        });
+        this.$.deleteAjax.generateRequest();
+      },
+      deleteButtonResponse: function(e) {
+        res = e.detail.response;
+        if (res != null && res.success == true) {
+          _projects = [];
+          for (var i = 0; i < this.projects.length; i++) {
+            if (!this.projects[i].checked) {
+              _projects.push(this.projects[i]);
+            }
+          }
+          this.projects = _projects;
+          this.$.deleteToast.show();
+        }
+      }
+    });
+  </script>
+
+</dom-module>

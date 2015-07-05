@@ -28,7 +28,7 @@ function __fish_hyena_projects
 end
 
 ## hyena
-complete -f -c hyena -n '__fish_hyena_using_command' -a "init ls add delete save restore"
+complete -f -c hyena -n '__fish_hyena_using_command' -a "init ls add delete save restore browser"
 
 ## hyena add
 complete -f -c hyena -n '__fish_hyena_using_command add' -a '(__fish_hyena_projects)'

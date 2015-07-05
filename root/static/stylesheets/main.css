@@ -1,0 +1,8 @@
+paper-toolbar paper-button {
+  margin-left: 300px;
+}
+project-list {
+  display: block;
+  width: 800px;
+  margin: 0 auto;
+}

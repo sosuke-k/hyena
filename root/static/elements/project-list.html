@@ -5,6 +5,7 @@
 <link rel="import" href="/static/bower_components/paper-button/paper-button.html">
 <link rel="import" href="/static/bower_components/iron-icons/iron-icons.html">
 <link rel="import" href="/static/bower_components/paper-checkbox/paper-checkbox.html">
+<link rel="import" href="/static/bower_components/paper-toast/paper-toast.html">
 
 <dom-module id="project-button">
   <template>
@@ -49,22 +50,25 @@
   </style>
 
   <template>
-    <iron-ajax auto url="http://localhost:8080/api/projects" handle-as="json" on-response="handleResponse">
+    <iron-ajax auto url="/api/projects" handle-as="json" on-response="handleResponse">
+    </iron-ajax>
+    <iron-ajax id="deleteAjax" method="POST" url="/api/project/delete/add_api_test" handle-as="json" on-response="deleteButtonResponse">
     </iron-ajax>
     <paper-item>
-      <paper-icon-button icon="delete"></paper-icon-button>
+      <paper-icon-button icon="delete" on-tap="pushDeleteButton"></paper-icon-button>
       <paper-item-body>
         <paper-button nolink>project name</paper-button>
       </paper-item-body>
     </paper-item>
     <template is="dom-repeat" items="{{projects}}">
       <paper-item role="menuitemcheckbox">
-        <paper-checkbox></paper-checkbox>
+        <paper-checkbox checked="{{item.checked}}"></paper-checkbox>
         <project-button project="{{item.name}}">
           {{item.name}}
         </project-button>
       </paper-item>
     </template>
+    <paper-toast id="deleteToast" text="Deleted Projects"></paper-toast>
   </template>
 
   <script>
@@ -74,7 +78,36 @@
         this.projects = [];
       },
       handleResponse: function(e) {
-        this.projects = e.detail.response;
+        _projects = e.detail.response;
+        for (var i = 0; i < _projects.length; i++) {
+          _projects[i]["checked"] = false;
+        }
+        this.projects = _projects;
+      },
+      pushDeleteButton: function(e) {
+        checked_list = [];
+        for (var i = 0; i < this.projects.length; i++) {
+          if (this.projects[i].checked) {
+            checked_list.push(this.projects[i].name);
+          }
+        }
+        this.$.deleteAjax.body = JSON.stringify({
+          "checked_list": checked_list
+        });
+        this.$.deleteAjax.generateRequest();
+      },
+      deleteButtonResponse: function(e) {
+        res = e.detail.response;
+        if (res != null && res.success == true) {
+          _projects = [];
+          for (var i = 0; i < this.projects.length; i++) {
+            if (!this.projects[i].checked) {
+              _projects.push(this.projects[i]);
+            }
+          }
+          this.projects = _projects;
+          this.$.deleteToast.show();
+        }
       }
     });
   </script>

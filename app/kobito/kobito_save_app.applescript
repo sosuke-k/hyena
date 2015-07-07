@@ -17,20 +17,32 @@ function kobito_get_window_info() {
     res[0] = [];
 
     var i = windowItems.length - 1;
+    var existsActiveWindow = 0;
     while (i > 0) {
         if (windowItems[i].name() == null) {
             break;
         }
+        if (windowItems[i].enabled() == true) {
+            existsActiveWindow = 1;
+        }
         res[0].push(windowItems[i].name());
         i--;
     }
-    var data = JSON.stringify(res, null, 2);
-    return data;
+    if (existsActiveWindow) {
+        var data = JSON.stringify(res, null, 2);
+        return data;
+    }
+    return null;
 }
 
 
 function run(argv) {
     fileIO = Library('fileIO');
     var activeWindows = kobito_get_window_info();
-    fileIO.write(argv, activeWindows);
+    if (activeWindows != null){
+        fileIO.write(argv, activeWindows);
+    }
+    else{
+        return;
+    }
 }

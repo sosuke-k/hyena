@@ -20,7 +20,7 @@ function kobito_get_window_info() {
     var existsActiveWindow = 0;
     while (i > 0) {
         if (windowItems[i].name() == null) {
-            break;
+            return null;
         }
         if (windowItems[i].enabled() == true) {
             existsActiveWindow = 1;

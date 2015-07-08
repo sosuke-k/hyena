@@ -14,13 +14,20 @@ function preview_get_docs_info() {
         // }
 
     }
-    var data = JSON.stringify(res, null, 2);
-    return data;
+    if(res[0].length != 0){
+        var data = JSON.stringify(res, null, 2);
+        return data;
+    }
+    return null;
 }
 
 
 function run(argv) {
     fileIO = Library('fileIO');
     var data = preview_get_docs_info();
-    fileIO.write(argv, data);
+
+    if(data != null){
+        console.log("file written");
+        fileIO.write(argv, data);
+    }
 }

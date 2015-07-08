@@ -48,7 +48,7 @@ func projectHandler(w http.ResponseWriter, r *http.Request) {
 	logStruct := git.ParseLog(logString)
 
 	templateDir := path.Join(os.Getenv("GOPATH"), "src/github.com/sosuke-k/hyena/root/templates")
-	templatePath := path.Join(templateDir, "git_history_skrollr.html")
+	templatePath := path.Join(templateDir, "git_history_jarallax.html")
 	tmpl, err := template.ParseFiles(templatePath)
 	if err != nil {
 		hyenaLogger.Fatalln(err)

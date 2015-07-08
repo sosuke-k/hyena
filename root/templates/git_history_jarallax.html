@@ -1,0 +1,111 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>TITLE</title>
+<link rel="stylesheet" href="/static/stylesheets/reset.css">
+<link rel="stylesheet" href="/static/stylesheets/jarallax.css" />
+<script src="/static/javascripts/jquery.js"></script>
+<script src="/static/javascripts/jquery-ui.js"></script>
+<script src="/static/javascripts/jquery.mousewheel.min.js"></script>
+<script src="/static/javascripts/jarallax-0.2.4b.js"></script>
+<script src="/static/javascripts/animations.js"></script>
+</head>
+<body onload="init()">
+    <nav>
+      <ul>
+        <li><a class="logo" href="http://www.jarallax.com">Home</a></li>
+        <li><a href="http://www.jarallax.com">Home</a></li>
+        <li><a href="http://www.jarallax.com/tutorial.html">Demo</a></li>
+        <li><a href="http://www.jarallax.com/demo.html">Tutorial</a></li>
+        <li><a href="http://www.jarallax.com/download">Download</a></li>
+        <li><a href="http://www.jarallax.com/subscribe">Mailing list</a></li>
+        <li><a href="http://jarallax.tumblr.com/">Blog</a></li>
+      </ul>
+    </nav>
+    <div class="container">
+      <a href="http://jarallax.com" class="logo">Jarallax</a>
+      <h2>Jarallax controllers introduction</h2>
+      <p class="long">This jarallax animation has mutiple controllers.<br />All Jarallax controllers can work simultaneously together.</p>
+
+      <p>the following controllers are active:</p>
+      <ul>
+        <li><b>Drag and drop controller</b>:<br />drag the button below to the right to ajust the animation position</li>
+        <li><b>Keyboard controller</b>:<br />press the down key on the keyboard to ajust the animation position</li>
+        <li><b>Mousewheel controller</b>:<br />scroll down with the mousewheel to ajust the animation position</li>
+      </ul>
+      <div id="animation">
+        <h1>Jarallax controllers</h1>
+        <span class="arrow">Arrow</span>
+        <span class="question">Question</span>
+        <span class="logo_big">Logo</span>
+        <h2 id="head1">What are Jarallax controllers?</h2>
+        <p id="p1">
+          Jarallax is an animation library you can use with custom controllers.
+          Instead of timebased animations you can control the animations with everything you want.
+          Jarallax controllers tell Jarallax at what position the current animation is and updates the CSS accordingly.
+        </p>
+        <h2 id="head2">How do you use it?</h2>
+        <p id="p2">
+          Every Jarallax animation uses an animation controller. By default Jarallax uses a Scroll controller.
+          Jarallax controllers are defined when constructing the Jarallax instance.
+          <code>
+            var jarallax = new Jarallax(new ControllerScroll());
+          </code>
+        </p>
+        <h2 id="head3">building a custom controller</h2>
+        <p id="p3" class="big">
+          Each Jarallax controller has an <i>"activate"</i> Method, <i>"deactivate"</i> Method and a custom method for updating.<br />
+            <br />
+            <b>Activate</b>: this method is initiated when the Jarallax instance is created.<br />
+            <b>Deactivate</b>: this method is optional, it usually removes event listeners which where created using the Activate method.
+          <br />
+          <br />
+          <a href="http://jarallax.tumblr.com/post/17546927816/jarallax-controllers-introduction">View blog post for more information</a>
+          <!--<code>
+            ControllerDemo = function(/* Enter required arguments here */){
+              //Define default variables and store arguments here.
+            }
+
+            ControllerDemo.prototype.activate = function(jarallax){
+              this.jarallax = jarallax;
+              //Contruct your controller here.
+            }
+
+            ControllerDemo.prototype.deactivate = function(){
+              //Destruct your controller here.
+            }
+
+            //Your method
+            ControllerDemo.prototype.myMethod = function(){
+              //Assign jarallax with the new animation position.
+              this.jarallax.setProgress(position)
+            }
+          </code>
+
+
+          <b>To attach this controller to Jarallax you run this code.</b>
+
+          <code>
+            var jarallax = new Jarallax(new ControllerDemo());
+          </code>-->
+        </p>
+
+      </div>
+      <div id="scrollbar">
+
+      </div>
+
+      <div id="button" href="#">
+        ScrollButton
+      </div>
+    </div>
+    <footer>
+    <div class="footer_container">
+      Copyright © Jarallax 2012<br />
+      <a href="http://www.jarallax.com/license.html">License</a>
+    </div>
+  </footer>
+  </body>
+
+</html>

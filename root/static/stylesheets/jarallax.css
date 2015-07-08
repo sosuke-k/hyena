@@ -1,0 +1,204 @@
+body{
+background:url(images/stripe.png);
+font-family:Arial;
+padding-top:50px;
+}
+
+a{
+text-decoration:none;
+}
+
+.container{
+background:white;
+position:relative;
+width:600px;
+left:50%;
+margin-left:-360px;
+padding:60px;
+box-shadow: 5px 5px 10px rgba(0,0,0,0.1);
+top: 10px;
+border:2px solid #ccc;
+border-radius:3px;
+margin-bottom: 20px;
+}
+
+#button{
+position:relative;
+display:block;
+text-indent:100px;
+width:20px;
+height:20px;
+border:5px solid #243651;
+border-radius:100px;
+overflow:hidden;
+background:white;
+margin-top:-18px;
+box-shadow:1px 1px 2px rgba(0,0,0,0.3);
+}
+
+#scrollbar{
+width:100%;
+background:#243651;
+height:5px;
+border-radius:10px;
+margin-top:20px;
+}
+
+#animation{
+height:300px;
+overflow:hidden;
+border:3px solid #f0f0f0;
+border-radius:20px;
+}
+
+h1{
+left: 100px;
+top: 70px;
+margin: 0 0 -100px 0;
+height: 100px;
+}
+
+h1, h2, p{
+position:relative;
+width: 370px;
+
+}
+
+.big{
+width: 500px;
+}
+
+.long{
+width: 100%;
+}
+
+.logo{
+display:block;
+width:120px;
+height:59px;
+background: url(images/jarallax.jpg);
+overflow:hidden;
+text-indent:1000px;
+}
+
+.arrow, .question, .logo_big{
+overflow:hidden;
+display:block;
+text-indent:1000px;
+margin:0;;
+padding:0;
+width:0;
+height:0;
+position:relative;
+}
+
+.arrow{
+width:156px;
+height:295px;
+background:url(images/jarallax_arrow.jpg);
+margin-bottom:-295px;
+margin-left:400px;
+}
+
+.question{
+width:200px;
+height:300px;
+background:url(images/question.jpg);
+margin-bottom:-300px;
+margin-left:400px;
+}
+
+.logo_big{
+
+}
+
+code{
+margin-top:20px;
+display:block;
+}
+
+nav{
+background:white;
+display:block;
+position:fixed;
+left:0;
+top:0;
+border-bottom: 2px solid #CCC;
+width:100%;
+z-index:10;
+overflow:visible;
+}
+
+nav ul{
+overflow:visible;
+padding: 0 0 0 130px;
+margin:0;
+position:relative;
+width:600px;
+left:50%;
+margin-left:-360px;
+}
+
+nav li{
+float:left;
+overflow:show;
+}
+
+nav .logo{
+position:absolute;
+display:block;
+width:111px;
+height:56px;
+background:url(images/head.png);
+overflow:hidden;
+text-indent:1000px;
+margin:0;
+padding:0;
+left:0;
+top:5px;
+border:none;
+z-index:11;
+}
+
+nav .logo:hover{
+background:url(images/head.png);
+}
+
+nav a{
+font-weight: bold;
+display: inline-block;
+font-size: 13px;
+padding: 15px 10px;
+color: black;
+margin: 0;
+text-align: center;
+}
+
+nav a:hover{
+color: black;
+background:#dddddd;
+}
+
+.button:hover{
+background-image: linear-gradient(bottom, rgb(20,32,54) 10%, rgb(97,119,158) 78%);
+background-image: -o-linear-gradient(bottom, rgb(20,32,54) 10%, rgb(97,119,158) 78%);
+background-image: -moz-linear-gradient(bottom, rgb(20,32,54) 10%, rgb(97,119,158) 78%);
+background-image: -webkit-linear-gradient(bottom, rgb(20,32,54) 10%, rgb(97,119,158) 78%);
+background-image: -ms-linear-gradient(bottom, rgb(20,32,54) 10%, rgb(97,119,158) 78%);
+
+background-image: -webkit-gradient(
+	linear,
+	left bottom,
+	left top,
+	color-stop(0.1, rgb(20,32,54)),
+	color-stop(0.78, rgb(97,119,158))
+);
+}
+
+.footer_container{
+text-align:center;
+}
+
+.share{
+float: right;
+}

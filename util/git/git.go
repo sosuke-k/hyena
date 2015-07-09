@@ -86,8 +86,7 @@ func ParseLog(logString string) LogStruct {
 		for _, s := range lines[start:end] {
 			message += s + "\n"
 		}
-		commit := CommitStruct{SHA: shas[i], Author: author, Message: message}
-		commits = append(commits, commit)
+		commits[i] = CommitStruct{SHA: shas[i], Author: author, Message: message}
 	}
 	return LogStruct{Commits: commits}
 }

@@ -131,3 +131,23 @@ func projectDiffAPIHandler(w http.ResponseWriter, r *http.Request) {
 
 	w.Write([]byte(diffString))
 }
+
+func projectLogAPIHandler(w http.ResponseWriter, r *http.Request) {
+	hyenaLogger := logger.GetInstance()
+	methodURL := r.Method + " " + r.URL.String()
+	hyenaLogger.Println(methodURL)
+	fmt.Fprintln(os.Stdout, methodURL)
+
+	params := mux.Vars(r)
+	name := params["name"]
+
+	projectDir := path.Join(getHyenaPath(), name)
+	log := git.ParseLog(git.Log(projectDir))
+
+	if err := json.NewEncoder(w).Encode(log); err != nil {
+		hyenaLogger.Fatalln(err)
+	}
+
+	hyenaLogger.Println("response write log")
+	fmt.Fprintln(os.Stdout, "response write log")
+}

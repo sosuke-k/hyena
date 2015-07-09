@@ -62,4 +62,10 @@ var routes = Routes{
 		"/api/project/{name}/diff/{oldCommit}/{newCommit}",
 		projectDiffAPIHandler,
 	},
+	Route{
+		"ProjectLogAPI",
+		"GET",
+		"/api/project/{name}/log",
+		projectLogAPIHandler,
+	},
 }

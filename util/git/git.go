@@ -144,7 +144,6 @@ func ParseCommitDiff(commitString string) CommitDiffStruct {
 			} else if devided := RegSplit(line, `^\+\+\+[\s]+`); len(devided) > 1 {
 				diff.AfterFileName = devided[1]
 			} else if devided := RegSplit(line, `[\s]*@@[\s]*`); len(devided) > 1 {
-				diff.BeforeFileName = devided[1]
 				infos := RegSplit(devided[1], `[\s]`)
 				for _, info := range infos {
 					if info[0] == '-' {

@@ -1,0 +1,93 @@
+<script src="/static/javascripts/jquery.js"></script>
+<script src="/static/javascripts/jquery-ui.js"></script>
+<script src="/static/javascripts/jquery.mousewheel.min.js"></script>
+<script src="/static/javascripts/jarallax-0.2.4b.js"></script>
+
+<link rel="import" href="/static/bower_components/polymer/polymer.html">
+<link rel="import" href="/static/bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="/static/bower_components/paper-button/paper-button.html">
+
+<dom-module id="project-history-jarallax">
+  <style>
+    :host {
+      display: block;
+    }
+    #button{
+      position:relative;
+      display:block;
+      text-indent:100px;
+      width:20px;
+      height:20px;
+      border:5px solid #243651;
+      border-radius:100px;
+      overflow:hidden;
+      background:white;
+      margin-top:-18px;
+      box-shadow:1px 1px 2px rgba(0,0,0,0.3);
+    }
+
+    #scrollbar{
+      width:100%;
+      background:#243651;
+      height:5px;
+      border-radius:10px;
+      margin-top:20px;
+    }
+
+    #animation{
+      height:600px;
+      overflow:hidden;
+      border:3px solid #f0f0f0;
+      border-radius:20px;
+    }
+  </style>
+
+  <template>
+    <iron-ajax auto url="/api/project/git_test/show/56a148c6fc12c53bfbcbea8ac0c077e5ea308f24" handle-as="json" on-response="handleResponse">
+    </iron-ajax>
+
+    <div id="animation">
+    </div>
+    <div id="scrollbar">
+    </div>
+    <div id="button" href="#">
+      ScrollButton
+    </div>
+  </template>
+
+  <script>
+    Polymer({
+      is: "project-history-jarallax",
+      ready: function() {
+        this.diffs = [];
+        console.log('git-history-jarallax is ready');
+      },
+      handleResponse: function(e) {
+        this.diffs = e.detail.response.diffs;
+        console.log(this.diffs);
+
+        for(var i = 0; i< this.diffs.length; i++) {
+          diff = this.diffs[i];
+          if (diff.after_file == "b/chrome.json") {
+            if (diff.before_file == "/dev/null") {
+              for (var j = 0; j < diff.add.lines.length; j++) {
+                var div = document.createElement("div");
+                div.innerHTML = diff.add.lines[j]
+                this.$.animation.appendChild(div);
+              }
+            }
+          }
+        }
+
+        var keys = {38:-0.01, 40:0.01};
+
+        var drag_controller = new ControllerDrag('#button',100,200);
+        var key_controller = new ControllerKeyboard(keys, true, true);
+        var wheel_controller = new ControllerMousewheel(0.01, true);
+
+        jarallax = new Jarallax([drag_controller, key_controller, wheel_controller]);
+      }
+    });
+  </script>
+
+</dom-module>

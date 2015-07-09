@@ -43,7 +43,8 @@
   </style>
 
   <template>
-    <iron-ajax auto url="/api/project/git_test/show/56a148c6fc12c53bfbcbea8ac0c077e5ea308f24" handle-as="json" on-response="handleResponse">
+    </iron-ajax>
+    <iron-ajax auto url="/api/project/git_test/log" handle-as="json" on-response="logResponse">
     </iron-ajax>
 
     <div id="animation">
@@ -62,22 +63,38 @@
         this.diffs = [];
         console.log('git-history-jarallax is ready');
       },
-      handleResponse: function(e) {
-        this.diffs = e.detail.response.diffs;
-        console.log(this.diffs);
+      logResponse: function(e) {
+        // console.log(this);
+        commits = e.detail.response.commits;
+        console.log(commits);
 
-        for(var i = 0; i< this.diffs.length; i++) {
-          diff = this.diffs[i];
-          if (diff.after_file == "b/chrome.json") {
-            if (diff.before_file == "/dev/null") {
-              for (var j = 0; j < diff.add.lines.length; j++) {
-                var div = document.createElement("div");
-                div.innerHTML = diff.add.lines[j]
-                this.$.animation.appendChild(div);
+        // commits.map( function(commit) {
+        for(var i = 0; i< commits.length; i++) {
+          var commit = commits[i];
+          // console.log(commit);
+          console.log(commit.sha);
+          // commit.diff.diffs.map( function(diff) {
+          for(var j = 0; j< commit.diff.diffs.length; j++) {
+            var diff = commit.diff.diffs[j];
+            // console.log(diff);
+            if (diff.after_file == "b/chrome.json") {
+              if (diff.before_file == "/dev/null") {
+                for (var k = 0; k < diff.add.lines.length; k++) {
+                  var div = document.createElement("div");
+                  div.innerHTML = diff.add.lines[k]
+                  this.$.animation.appendChild(div);// this is window not polymer
+                }
+              } else if (diff.before_file == "a/chrome.json") {
+                console.log(diff);
               }
             }
           }
+          // });
         }
+        // });
+        this.initJarallax();
+      },
+      initJarallax: function() {
 
         var keys = {38:-0.01, 40:0.01};
 

@@ -1,7 +1,10 @@
 package git
 
 import (
+	"fmt"
+	"os"
 	"regexp"
+	"strconv"
 	"time"
 
 	"github.com/sosuke-k/hyena/util/sh"
@@ -23,14 +26,15 @@ type CommitStruct struct {
 
 // CommitDiffStruct struct
 type CommitDiffStruct struct {
-	FileName string       `json:"file"`
-	Diffs    []DiffStruct `json:"diffs"`
+	Diffs []DiffStruct `json:"diffs"`
 }
 
 // DiffStruct struct
 type DiffStruct struct {
-	Add    DiffInfoStruct `json:"add"`
-	Delete DiffInfoStruct `json:"delete"`
+	BeforeFileName string         `json:"before_file"`
+	AfterFileName  string         `json:"after_file"`
+	Add            DiffInfoStruct `json:"add"`
+	Delete         DiffInfoStruct `json:"delete"`
 }
 
 // DiffInfoStruct struct
@@ -108,6 +112,79 @@ func RegSplit(text string, delimeter string) []string {
 // Show return git show sha in dir
 func Show(dir string, sha string) string {
 	return execute(dir, []string{"show", sha})
+}
+
+// ParseCommitDiff parses commit and diff info returned git show with sha
+func ParseCommitDiff(commitString string) CommitDiffStruct {
+	lines := RegSplit(commitString, `\n`)
+	var indexes []int
+	for i, s := range lines {
+		tmp := RegSplit(s, `^diff[\s]+`)
+		if len(tmp) > 1 {
+			indexes = append(indexes, i)
+		}
+	}
+	diffs := make([]DiffStruct, len(indexes))
+	for i, idx := range indexes {
+		var diff DiffStruct
+		var deletedInfo DiffInfoStruct
+		deletedInfo.Lines = []string{}
+		var addedInfo DiffInfoStruct
+		addedInfo.Lines = []string{}
+		start := idx
+		var end int
+		if i+1 < len(indexes) {
+			end = indexes[i+1] // - 1
+		} else {
+			end = len(lines) // - 1
+		}
+		for _, line := range lines[start:end] {
+			if devided := RegSplit(line, `^---[\s]+`); len(devided) > 1 {
+				diff.BeforeFileName = devided[1]
+			} else if devided := RegSplit(line, `^\+\+\+[\s]+`); len(devided) > 1 {
+				diff.AfterFileName = devided[1]
+			} else if devided := RegSplit(line, `[\s]*@@[\s]*`); len(devided) > 1 {
+				diff.BeforeFileName = devided[1]
+				infos := RegSplit(devided[1], `[\s]`)
+				for _, info := range infos {
+					if info[0] == '-' {
+						ints := RegSplit(info[1:], `,`)
+						if i, err := strconv.Atoi(ints[0]); err != nil {
+							fmt.Fprintln(os.Stderr, err.Error())
+						} else {
+							deletedInfo.Start = i
+						}
+						if i, err := strconv.Atoi(ints[1]); err != nil {
+							fmt.Fprintln(os.Stderr, err.Error())
+						} else {
+							deletedInfo.Sum = i
+						}
+					}
+					if info[0] == '+' {
+						ints := RegSplit(info[1:], `,`)
+						if i, err := strconv.Atoi(ints[0]); err != nil {
+							fmt.Fprintln(os.Stderr, err.Error())
+						} else {
+							addedInfo.Start = i
+						}
+						if i, err := strconv.Atoi(ints[1]); err != nil {
+							fmt.Fprintln(os.Stderr, err.Error())
+						} else {
+							addedInfo.Sum = i
+						}
+					}
+				}
+			} else if devided := RegSplit(line, `^-{1,1}`); len(devided) > 1 {
+				deletedInfo.Lines = append(deletedInfo.Lines, devided[1])
+			} else if devided := RegSplit(line, `^\+{1,1}`); len(devided) > 1 {
+				addedInfo.Lines = append(addedInfo.Lines, devided[1])
+			}
+		}
+		diff.Delete = deletedInfo
+		diff.Add = addedInfo
+		diffs[i] = diff
+	}
+	return CommitDiffStruct{Diffs: diffs}
 }
 
 // Diff return git diff oldCommit newCommit in dir

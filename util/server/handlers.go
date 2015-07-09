@@ -151,3 +151,25 @@ func projectLogAPIHandler(w http.ResponseWriter, r *http.Request) {
 	hyenaLogger.Println("response write log")
 	fmt.Fprintln(os.Stdout, "response write log")
 }
+
+func projectShowAPIHandler(w http.ResponseWriter, r *http.Request) {
+	hyenaLogger := logger.GetInstance()
+	methodURL := r.Method + " " + r.URL.String()
+	hyenaLogger.Println(methodURL)
+	fmt.Fprintln(os.Stdout, methodURL)
+
+	params := mux.Vars(r)
+	name := params["name"]
+	sha := params["sha"]
+
+	projectDir := path.Join(getHyenaPath(), name)
+
+	diff := git.ParseCommitDiff(git.Show(projectDir, sha))
+
+	if err := json.NewEncoder(w).Encode(diff); err != nil {
+		hyenaLogger.Fatalln(err)
+	}
+
+	hyenaLogger.Println("response write show " + sha)
+	fmt.Fprintln(os.Stdout, "response write show "+sha)
+}

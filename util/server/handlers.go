@@ -144,6 +144,10 @@ func projectLogAPIHandler(w http.ResponseWriter, r *http.Request) {
 	projectDir := path.Join(getHyenaPath(), name)
 	log := git.ParseLog(git.Log(projectDir))
 
+	for i, commit := range log.Commits {
+		log.Commits[i].Diff = git.ParseCommitDiff(git.Show(projectDir, commit.SHA))
+	}
+
 	if err := json.NewEncoder(w).Encode(log); err != nil {
 		hyenaLogger.Fatalln(err)
 	}

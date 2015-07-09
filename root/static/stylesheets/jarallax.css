@@ -1,3 +1,7 @@
+#button1 {
+	display: none;
+}
+
 body{
 background:url(images/stripe.png);
 font-family:Arial;

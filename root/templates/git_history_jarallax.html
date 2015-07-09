@@ -10,8 +10,22 @@
 <script src="/static/javascripts/jquery.mousewheel.min.js"></script>
 <script src="/static/javascripts/jarallax-0.2.4b.js"></script>
 <script src="/static/javascripts/animations.js"></script>
+<script src="/static/bower_components/webcomponentsjs/webcomponents-lite.min.js"></script>
+<link rel="import" href="/static/bower_components/paper-button/paper-button.html">
+<link rel="import" href="/static/bower_components/iron-ajax/iron-ajax.html">
 </head>
 <body onload="init()">
+  <iron-ajax id="ajax" auto url="/api/projects" handle-as="json" on-response="ajaxProjects">
+  </iron-ajax>
+  <script>
+  function ajaxProjects(e) {
+    console.log(e.detail.response);
+  }
+  var dom = document.querySelector("#ajax");
+  console.log(dom);
+  </script>
+  <paper-button id="button1" raised>BUTTON1</paper-button>
+  <paper-button id="button2" raised>BUTTON2</paper-button>
     <nav>
       <ul>
         <li><a class="logo" href="http://www.jarallax.com">Home</a></li>

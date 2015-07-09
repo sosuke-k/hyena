@@ -21,7 +21,7 @@ function preview_restore_doc(json_string) {
 
 function run(argv) {
     try {
-        var app = Application('Preview');
+        var app = Application('com.apple.Preview');
     } catch (e) {
         console.log(e);
         return false;

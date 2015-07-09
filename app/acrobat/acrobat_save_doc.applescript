@@ -1,7 +1,7 @@
 #!/usr/bin/env osascript -l JavaScript
 
 function acrobat_get_docs_info() {
-    app = Application('Adobe Acrobat');
+    app = Application('com.adobe.Acrobat.Pro');
     var res = {};
     res[0] = [];
 
@@ -16,7 +16,7 @@ function acrobat_get_docs_info() {
 
 function run(argv) {
     try {
-        var app = Application('Adobe Acrobat');
+        var app = Application('com.adobe.Acrobat.Pro');
     } catch (e) {
         console.log(e);
         return false;

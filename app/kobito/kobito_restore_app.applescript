@@ -24,7 +24,7 @@ function open_n_th_item(n) {
 }
 
 function activate_kobito() {
-    var kobito = Application("Kobito");
+    var kobito = Application('com.qiita.Kobito');
     kobito.quit();
     var app = Application.currentApplication();
     app.includeStandardAdditions = true;
@@ -44,7 +44,7 @@ function get_one_title(json_string) {
 
 function run(argv) {
     try {
-        var app = Application('Kobito');
+        var app = Application('com.qiita.Kobito');
     } catch (e) {
         console.log(e);
         return false;

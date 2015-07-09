@@ -1,7 +1,7 @@
 #!/usr/bin/env osascript -l JavaScript
 
 function chrome_restore_tabs(json_string) {
-    app = Application('Google Chrome');
+    app = Application('com.google.Chrome');
     var data = JSON.parse(json_string);
     var n_windows = Object.keys(data).length;
 
@@ -24,7 +24,7 @@ function chrome_restore_tabs(json_string) {
 
 function run(argv) {
     try {
-        var app = Application('Google Chrome');
+        var app = Application('com.google.Chrome');
     } catch (e) {
         console.log(e);
         return false;

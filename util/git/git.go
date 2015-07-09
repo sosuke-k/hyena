@@ -105,6 +105,11 @@ func RegSplit(text string, delimeter string) []string {
 	return result
 }
 
+// Show return git show sha in dir
+func Show(dir string, sha string) string {
+	return execute(dir, []string{"show", sha})
+}
+
 // Diff return git diff oldCommit newCommit in dir
 func Diff(dir string, oldCommit string, newCommit string) string {
 	return execute(dir, []string{"diff", oldCommit, newCommit})

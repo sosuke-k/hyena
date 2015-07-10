@@ -66,7 +66,7 @@
       logResponse: function(e) {
         // console.log(this);
         commits = e.detail.response.commits;
-        console.log(commits);
+        console.log(commits[1].diff.diffs[0]);
 
         // commits.map( function(commit) {
         for(var i = 0; i< commits.length; i++) {
@@ -79,9 +79,11 @@
             // console.log(diff);
             if (diff.after_file == "b/chrome.json") {
               if (diff.before_file == "/dev/null") {
-                for (var k = 0; k < diff.add.lines.length; k++) {
+                for (var k = 0; k < diff.add.sentences.length; k++) {
                   var div = document.createElement("div");
-                  div.innerHTML = diff.add.lines[k]
+                  var n = diff.add.sentences[k].n;
+                  var s = diff.add.sentences[k].s;
+                  div.innerHTML = n + " :" + s;
                   this.$.animation.appendChild(div);// this is window not polymer
                 }
               } else if (diff.before_file == "a/chrome.json") {

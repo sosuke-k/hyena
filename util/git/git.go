@@ -39,9 +39,15 @@ type DiffStruct struct {
 
 // DiffInfoStruct struct
 type DiffInfoStruct struct {
-	Start int      `json:"start"`
-	Sum   int      `json:"sum"`
-	Lines []string `json:"lines"`
+	Start     int        `json:"start"`
+	Sum       int        `json:"sum"`
+	Sentences []Sentence `json:"sentences"`
+}
+
+// Sentence struct
+type Sentence struct {
+	N int    `json:"n"`
+	S string `json:"s"`
 }
 
 // Init execute git init in dir
@@ -128,9 +134,11 @@ func ParseCommitDiff(commitString string) CommitDiffStruct {
 	for i, idx := range indexes {
 		var diff DiffStruct
 		var deletedInfo DiffInfoStruct
-		deletedInfo.Lines = []string{}
+		deletedInfo.Sentences = []Sentence{}
 		var addedInfo DiffInfoStruct
-		addedInfo.Lines = []string{}
+		addedInfo.Sentences = []Sentence{}
+		atIdx := 0
+		sumDeleteLine := 0
 		start := idx
 		var end int
 		if i+1 < len(indexes) {
@@ -138,45 +146,51 @@ func ParseCommitDiff(commitString string) CommitDiffStruct {
 		} else {
 			end = len(lines) // - 1
 		}
-		for _, line := range lines[start:end] {
+		for lineIdx, line := range lines[start:end] {
 			if devided := RegSplit(line, `^---[\s]+`); len(devided) > 1 {
 				diff.BeforeFileName = devided[1]
 			} else if devided := RegSplit(line, `^\+\+\+[\s]+`); len(devided) > 1 {
 				diff.AfterFileName = devided[1]
 			} else if devided := RegSplit(line, `[\s]*@@[\s]*`); len(devided) > 1 {
+				atIdx = lineIdx
 				infos := RegSplit(devided[1], `[\s]`)
 				for _, info := range infos {
 					if info[0] == '-' {
 						ints := RegSplit(info[1:], `,`)
-						if i, err := strconv.Atoi(ints[0]); err != nil {
+						if beforeStart, err := strconv.Atoi(ints[0]); err != nil {
 							fmt.Fprintln(os.Stderr, err.Error())
 						} else {
-							deletedInfo.Start = i
+							deletedInfo.Start = beforeStart
 						}
-						if i, err := strconv.Atoi(ints[1]); err != nil {
+						if beforeSum, err := strconv.Atoi(ints[1]); err != nil {
 							fmt.Fprintln(os.Stderr, err.Error())
 						} else {
-							deletedInfo.Sum = i
+							deletedInfo.Sum = beforeSum
 						}
 					}
 					if info[0] == '+' {
 						ints := RegSplit(info[1:], `,`)
-						if i, err := strconv.Atoi(ints[0]); err != nil {
+						if afterStart, err := strconv.Atoi(ints[0]); err != nil {
 							fmt.Fprintln(os.Stderr, err.Error())
 						} else {
-							addedInfo.Start = i
+							addedInfo.Start = afterStart
 						}
-						if i, err := strconv.Atoi(ints[1]); err != nil {
+						if afterSum, err := strconv.Atoi(ints[1]); err != nil {
 							fmt.Fprintln(os.Stderr, err.Error())
 						} else {
-							addedInfo.Sum = i
+							addedInfo.Sum = afterSum
 						}
 					}
 				}
 			} else if devided := RegSplit(line, `^-{1,1}`); len(devided) > 1 {
-				deletedInfo.Lines = append(deletedInfo.Lines, devided[1])
+				sumDeleteLine++
+				lineNumber := lineIdx - atIdx
+				sentence := Sentence{N: lineNumber, S: devided[1]}
+				deletedInfo.Sentences = append(deletedInfo.Sentences, sentence)
 			} else if devided := RegSplit(line, `^\+{1,1}`); len(devided) > 1 {
-				addedInfo.Lines = append(addedInfo.Lines, devided[1])
+				lineNumber := lineIdx - atIdx - sumDeleteLine
+				sentence := Sentence{N: lineNumber, S: devided[1]}
+				addedInfo.Sentences = append(addedInfo.Sentences, sentence)
 			}
 		}
 		diff.Delete = deletedInfo

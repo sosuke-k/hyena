@@ -1,7 +1,7 @@
 #!/usr/bin/env osascript -l JavaScript
 
 function preview_get_docs_info() {
-    app = Application('Preview');
+    app = Application('com.apple.Preview');
     var res = {};
     res[0] = [];
     for (i = 0; i < app.documents().length; i++) { // multiple windows

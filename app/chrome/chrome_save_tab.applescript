@@ -1,7 +1,7 @@
 #!/usr/bin/env osascript -l JavaScript
 
 function chrome_get_tab_info() {
-    app = Application('Google Chrome');
+    app = Application('com.google.Chrome');
     windows = app.windows();
     var res = {};
 

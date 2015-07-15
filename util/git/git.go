@@ -65,6 +65,7 @@ func Commit(dir string, msg string, force bool) {
 	}
 }
 
+// Log Returns git log string
 func Log(dir string) string {
 	return execute(dir, []string{"log"})
 }

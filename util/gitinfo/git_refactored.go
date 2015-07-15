@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"regexp"
+	"strconv"
 	"time"
 
 	"github.com/sosuke-k/hyena/util/git"
@@ -41,20 +42,10 @@ func NewCommit(dir string, sha string) (commit *Commit) {
 	commit.Author = extractAuthor(commitString)
 	commit.Date = extractDate(commitString)
 	commit.Message = extractMessage(commitString)
-	return
-}
-
-func devideCommit(log string) (diffs []string) {
-	reg := regexp.MustCompile(`\ndiff`)
-	idxs := reg.FindAllStringIndex(log, -1)
-	// diffs = []
-	for i := range idxs {
-		if i+1 < len(idxs) {
-			diffs = append(diffs, log[idxs[i][0]+1:idxs[i+1][0]+1])
-		} else {
-			diffs = append(diffs, log[idxs[i][0]+1:])
-		}
-
+	diffs := devideCommit(commitString)
+	fmt.Println(extractFileName(`\-`, diffs[0]))
+	for _, diff := range diffs {
+		commit.Diffs = append(commit.Diffs, parseDiff(diff))
 	}
 	return
 }
@@ -80,12 +71,43 @@ func extractDate(log string) (t time.Time) {
 }
 
 func extractMessage(log string) (msg string) {
-	res := re.FindString(log, `Date:\s{3}(\n|.)*diff.*`)
-	lines := re.Split(res, `\n`)
-	msg = ""
-	for i := 1; i < len(lines)-2; i++ {
-		msg += lines[i] + "\n"
-	}
-	msg += lines[len(lines)-2]
+	start := re.FindStringIndex(log, `Date:\s{3}.*\n`)[1]
+	end := re.FindStringIndex(log, `\ndiff`)[0]
+	msg = log[start:end]
 	return
+}
+
+func devideCommit(log string) (diffs []string) {
+	reg := regexp.MustCompile(`\ndiff`)
+	idxs := reg.FindAllStringIndex(log, -1)
+	// diffs = []
+	for i := range idxs {
+		if i+1 < len(idxs) {
+			diffs = append(diffs, log[idxs[i][0]+1:idxs[i+1][0]+1])
+		} else {
+			diffs = append(diffs, log[idxs[i][0]+1:])
+		}
+
+	}
+	return
+}
+
+func parseDiff(log string) (diff Diff) {
+	diff.D.FileName = extractFileName(`\-`, log)
+	diff.A.FileName = extractFileName(`\+`, log)
+
+	return
+}
+
+func extractFileName(signal string, diff string) string {
+	return re.FindStringSubmatch(diff, signal+`{3}\s([a-zA-Z0-9./]*)`)[1]
+}
+
+func extractStart(diff string) []int {
+	ints := re.FindStringSubmatch(diff, ``)
+	return []int{strconv.Atoi(ints[1])}
+}
+
+func extractInfo(diff *Diff, diffString string) {
+
 }

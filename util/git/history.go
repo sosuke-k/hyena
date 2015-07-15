@@ -3,6 +3,8 @@ package git
 import (
 	"fmt"
 	"strconv"
+
+	"github.com/davecgh/go-spew/spew"
 )
 
 // Histories struct
@@ -47,6 +49,8 @@ func ConverLogToHistroy(fileName string, log LogStruct) Histories {
 			}
 		}
 	}
+
+	spew.Dump(histories)
 
 	return Histories{FileName: fileName, HistoryArray: histories}
 }

@@ -34,6 +34,11 @@ func FindAllString(text string, match string) []string {
 	return reg.FindAllString(text, -1)
 }
 
+func FindAllStringSubmatch(text string, match string) [][]string {
+	reg := regexp.MustCompile(match)
+	return reg.FindAllStringSubmatch(text, -1)
+}
+
 // FindStringIndex finds most left match string in text string
 func FindStringIndex(text string, match string) []int {
 	reg := regexp.MustCompile(match)

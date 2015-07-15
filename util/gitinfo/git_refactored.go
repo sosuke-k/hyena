@@ -3,6 +3,7 @@ package gitinfo
 import (
 	"fmt"
 	"os"
+	"regexp"
 	"time"
 
 	"github.com/sosuke-k/hyena/util/git"
@@ -43,21 +44,33 @@ func NewCommit(dir string, sha string) (commit *Commit) {
 	return
 }
 
+func devideCommit(log string) (diffs []string) {
+	reg := regexp.MustCompile(`\ndiff`)
+	idxs := reg.FindAllStringIndex(log, -1)
+	// diffs = []
+	for i := range idxs {
+		if i+1 < len(idxs) {
+			diffs = append(diffs, log[idxs[i][0]+1:idxs[i+1][0]+1])
+		} else {
+			diffs = append(diffs, log[idxs[i][0]+1:])
+		}
+
+	}
+	return
+}
+
 func extractSHA(log string) (sha string) {
-	res := re.FindString(log, `commit\s[a-zA-Z0-9]{40,40}`)
-	sha = re.FindString(res, `[a-zA-Z0-9]{40}`)
+	sha = re.FindStringSubmatch(log, `^commit\s([a-zA-Z0-9]{40})`)[1]
 	return
 }
 
 func extractAuthor(log string) (author string) {
-	res := re.FindString(log, `Author:\s.*`)
-	author = re.Split(res, `Author:\s`)[1]
+	author = re.FindStringSubmatch(log, `Author:\s(.*)`)[1]
 	return
 }
 
 func extractDate(log string) (t time.Time) {
-	res := re.FindString(log, `Date:\s{3}.*\n`)
-	date := re.Split(re.Split(res, `Date:\s{3}`)[1], `\n`)[0]
+	date := re.FindStringSubmatch(log, `Date:\s{3}(.*)`)[1]
 	ansic := "Mon Jan _2 15:04:05 2006 +0900"
 	t, e := time.Parse(ansic, date)
 	if e != nil {

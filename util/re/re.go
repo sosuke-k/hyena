@@ -21,3 +21,15 @@ func FindString(text string, match string) string {
 	reg := regexp.MustCompile(match)
 	return reg.FindString(text)
 }
+
+// FindStringSubmatch finds most left match string in text string
+func FindStringSubmatch(text string, match string) []string {
+	reg := regexp.MustCompile(match)
+	return reg.FindStringSubmatch(text)
+}
+
+// FindAllString finds most left match string in text string
+func FindAllString(text string, match string) []string {
+	reg := regexp.MustCompile(match)
+	return reg.FindAllString(text, -1)
+}

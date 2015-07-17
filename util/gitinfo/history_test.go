@@ -1,7 +1,11 @@
 package gitinfo
 
 import "testing"
-import . "github.com/smartystreets/goconvey/convey"
+import (
+	"github.com/davecgh/go-spew/spew"
+	. "github.com/smartystreets/goconvey/convey"
+	"github.com/sosuke-k/hyena/util/git"
+)
 
 func TestNumberSequence(t *testing.T) {
 
@@ -74,7 +78,42 @@ func TestConverter(t *testing.T) {
 	})
 
 	Convey("applyD", t, func() {
+		projectDir := "/Users/katososuke/.config/hyena/git_test"
+		shas := GetSHAArray(projectDir)
+		sha := shas[len(shas)-1]
+		commit := *NewCommit(git.Show(projectDir, sha))
+		diff := commit.Diffs[0]
+		// spew.Dump(diff)
+		Convey(`when deleted file name is "/dev/null"`, func() {
+			var conv Converter
+			idx := 0
+			conv.setCommitIdx(idx)
+			// var fh FileHistories
+			fh := FileHistories{}
+			l := len(fh)
+			conv.applyD(diff, &fh)
+			So(l, ShouldEqual, len(fh))
+		})
+	})
 
-		Convey("This isn't yet implemented", nil)
+	Convey("applyA", t, func() {
+		projectDir := "/Users/katososuke/.config/hyena/git_test"
+		shas := GetSHAArray(projectDir)
+
+		Convey("first commit", func() {
+			sha := shas[len(shas)-1]
+			commit := *NewCommit(git.Show(projectDir, sha))
+			diff := commit.Diffs[0]
+			spew.Dump(diff)
+
+			var conv Converter
+			idx := 0
+			conv.setCommitIdx(idx)
+			// var fh FileHistories
+			fh := FileHistories{}
+			l := len(fh)
+			conv.applyA(diff, &fh)
+			So(l, ShouldEqual, len(fh))
+		})
 	})
 }

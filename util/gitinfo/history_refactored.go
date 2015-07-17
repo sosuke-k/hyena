@@ -1,6 +1,10 @@
 package gitinfo
 
-import "fmt"
+import (
+	"fmt"
+
+	"github.com/sosuke-k/hyena/util/git"
+)
 
 // FileHistories struct
 type FileHistories map[string]Histories
@@ -55,6 +59,11 @@ type Converter struct {
 	next      map[string]Histories
 }
 
+func (c *Converter) init(idx int) {
+	c.current = make(map[string]Histories)
+	c.next = make(map[string]Histories)
+}
+
 func (c *Converter) setCommitIdx(idx int) {
 	c.commitIdx = idx
 }
@@ -78,17 +87,26 @@ func (c *Converter) applyD(diff Diff, histories *FileHistories) {
 
 func (c *Converter) applyA(diff Diff, histories *FileHistories) {
 	name := diff.A.FileName
+
+	// diff.A.Sentences ではんく c.current[name] のループをまわすようにする
+
+	if name == diff.D.FileName {
+		// diff[name] の初期化処理
+		return
+	}
+
 	for i, s := range diff.A.Sentences {
 		n := diff.A.LineNumbers[i]
-		// sからhistory生成
-		lns := []int{n}
-		h := History{LineString: s, LineNumberSequence: lns}
+
+		h := histories.append(name, s)
+		h.LineNumberSequence.init(c.commitIdx - 1)
+		h.LineNumberSequence.push(n)
 
 		// current1 := current[name][:i]
-		current2 := c.current[name][i+1:]
+		// current2 := c.current[name][i+1:]
 
-		c.next[name] = append(c.current[name][:i], &h)
-		c.current[name] = append(c.current[name], current2...)
+		c.next[name] = append(c.current[name][:i], h)
+		c.next[name] = append(c.current[name], c.current[name][i+1:]...)
 	}
 	c.current[name] = append(c.current[name])
 }
@@ -109,7 +127,7 @@ func Hoge() {
 	shas := GetSHAArray(projectDir)
 	var commits []Commit
 	for _, sha := range shas {
-		commits = append(commits, *NewCommit(projectDir, sha))
+		commits = append(commits, *NewCommit(git.Show(projectDir, sha)))
 	}
 	var histories FileHistories
 	convertCommitsToHistory(&commits, &histories)

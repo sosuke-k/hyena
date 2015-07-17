@@ -7,7 +7,6 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/davecgh/go-spew/spew"
 	"github.com/sosuke-k/hyena/util/git"
 	"github.com/sosuke-k/hyena/util/re"
 )
@@ -40,9 +39,8 @@ func GetSHAArray(projectDir string) []string {
 }
 
 // NewCommit initializes Commit struct by sha
-func NewCommit(dir string, sha string) (commit *Commit) {
+func NewCommit(commitString string) (commit *Commit) {
 	commit = new(Commit)
-	commitString := git.Show(dir, sha)
 	commit.SHA = extractSHA(commitString)
 	commit.Author = extractAuthor(commitString)
 	commit.Date = extractDate(commitString)
@@ -53,7 +51,7 @@ func NewCommit(dir string, sha string) (commit *Commit) {
 	for _, diff := range diffs {
 		commit.Diffs = append(commit.Diffs, parseDiff(diff))
 	}
-	spew.Dump(commit)
+	// spew.Dump(commit)
 	return
 }
 

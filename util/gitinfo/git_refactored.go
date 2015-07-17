@@ -71,7 +71,10 @@ func extractAllSHA(log string) (shas []string) {
 }
 
 func extractAuthor(log string) (author string) {
-	author = re.FindStringSubmatch(log, `Author:\s(.*)`)[1]
+	res := re.FindStringSubmatch(log, `Author:\s(.*)`)
+	if len(res) > 0 {
+		author = res[1]
+	}
 	return
 }
 

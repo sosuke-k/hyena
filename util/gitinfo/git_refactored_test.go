@@ -34,7 +34,7 @@ func TestExtractAuthor(t *testing.T) {
 
 	Convey("Given not appropriate commit info", t, func() {
 
-		Convey("It should return name and email", func() {
+		Convey("It should return empty string", func() {
 			So(extractAuthor(""), ShouldEqual, "")
 		})
 	})

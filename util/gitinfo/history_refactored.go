@@ -21,19 +21,29 @@ type History struct {
 type NumberSequence []int
 
 func (p *NumberSequence) init(n int) {
-	ns := *p
-	//n個 -1 で初期化
+	ns := make([]int, n)
+	for i := range ns {
+		ns[i] = -1
+	}
 	*p = ns
 }
 
 func (p *NumberSequence) push(n int) {
-
+	ns := *p
+	ns = append(ns, n)
+	*p = ns
 }
 
 func (pfh *FileHistories) append(fileName string, sentence string) *History {
 	fh := *pfh
 	h := History{LineString: sentence, LineNumberSequence: []int{}}
-	fh[fileName] = append(fh[fileName], &h)
+	histories, ok := fh[fileName]
+	if ok == false {
+		fh = make(map[string]Histories)
+		histories = Histories{}
+	}
+	histories = append(histories, &h)
+	fh[fileName] = histories
 	*pfh = fh
 	return &h
 }
@@ -43,6 +53,10 @@ type Converter struct {
 	commitIdx int
 	current   map[string]Histories
 	next      map[string]Histories
+}
+
+func (c *Converter) setCommitIdx(idx int) {
+	c.commitIdx = idx
 }
 
 func (c *Converter) apply(diff Diff, histories *FileHistories) {

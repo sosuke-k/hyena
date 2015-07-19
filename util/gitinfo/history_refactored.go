@@ -163,7 +163,8 @@ func (c *Converter) applyA(diff Diff, p *FileHistories) {
 	p = &fh
 }
 
-func convertCommitsToHistory(commits []Commit, histories *FileHistories) {
+// ConvertCommitsToHistory func
+func ConvertCommitsToHistory(commits []Commit, histories *FileHistories) {
 	fmt.Println("====convertCommitsToHistory====")
 	var conv Converter
 	conv.init()
@@ -190,5 +191,5 @@ func Hoge() {
 		commits = append(commits, *NewCommit(git.Show(projectDir, sha)))
 	}
 	var histories FileHistories
-	convertCommitsToHistory(commits, &histories)
+	ConvertCommitsToHistory(commits, &histories)
 }

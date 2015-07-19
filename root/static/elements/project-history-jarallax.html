@@ -44,7 +44,7 @@
 
   <template>
     </iron-ajax>
-    <iron-ajax auto url="/api/project/git_test/log" handle-as="json" on-response="logResponse">
+    <iron-ajax auto url="/api/project/git_test/history" handle-as="json" on-response="logResponse">
     </iron-ajax>
 
     <div id="animation">
@@ -65,35 +65,38 @@
       },
       logResponse: function(e) {
         // console.log(this);
-        commits = e.detail.response.commits;
-        console.log(commits[1].diff.diffs[0]);
-
-        // commits.map( function(commit) {
-        for(var i = 0; i< commits.length; i++) {
-          var commit = commits[i];
-          // console.log(commit);
-          console.log(commit.sha);
-          // commit.diff.diffs.map( function(diff) {
-          for(var j = 0; j< commit.diff.diffs.length; j++) {
-            var diff = commit.diff.diffs[j];
-            // console.log(diff);
-            if (diff.after_file == "b/chrome.json") {
-              if (diff.before_file == "/dev/null") {
-                for (var k = 0; k < diff.add.sentences.length; k++) {
-                  var div = document.createElement("div");
-                  var n = diff.add.sentences[k].n;
-                  var s = diff.add.sentences[k].s;
-                  div.innerHTML = n + " :" + s;
-                  this.$.animation.appendChild(div);// this is window not polymer
-                }
-              } else if (diff.before_file == "a/chrome.json") {
-                console.log(diff);
-              }
-            }
-          }
-          // });
-        }
+        // commits = e.detail.response.commits;
+        // console.log(commits[1].diff.diffs[0]);
+        //
+        // // commits.map( function(commit) {
+        // for(var i = 0; i< commits.length; i++) {
+        //   var commit = commits[i];
+        //   // console.log(commit);
+        //   console.log(commit.sha);
+        //   // commit.diff.diffs.map( function(diff) {
+        //   for(var j = 0; j< commit.diff.diffs.length; j++) {
+        //     var diff = commit.diff.diffs[j];
+        //     // console.log(diff);
+        //     if (diff.after_file == "b/chrome.json") {
+        //       if (diff.before_file == "/dev/null") {
+        //         for (var k = 0; k < diff.add.sentences.length; k++) {
+        //           var div = document.createElement("div");
+        //           var n = diff.add.sentences[k].n;
+        //           var s = diff.add.sentences[k].s;
+        //           div.innerHTML = n + " :" + s;
+        //           this.$.animation.appendChild(div);// this is window not polymer
+        //         }
+        //       } else if (diff.before_file == "a/chrome.json") {
+        //         console.log(diff);
+        //       }
+        //     }
+        //   }
+        //   // });
+        // }
         // });
+
+        console.log(e.detail.response);
+
         this.initJarallax();
       },
       initJarallax: function() {

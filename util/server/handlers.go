@@ -11,6 +11,7 @@ import (
 	"github.com/bitly/go-simplejson"
 	"github.com/gorilla/mux"
 	"github.com/sosuke-k/hyena/util/git"
+	"github.com/sosuke-k/hyena/util/gitinfo"
 	"github.com/sosuke-k/hyena/util/log"
 	"github.com/sosuke-k/hyena/util/pm"
 )
@@ -44,8 +45,13 @@ func projectHandler(w http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
 	name := params["name"]
 	projectDir := path.Join(getHyenaPath(), name)
-	logString := git.Log(projectDir)
-	logStruct := git.ParseLog(logString)
+	shas := gitinfo.GetSHAArray(projectDir)
+	var commits []gitinfo.Commit
+	for _, sha := range shas {
+		commits = append(commits, *gitinfo.NewCommit(git.Show(projectDir, sha)))
+	}
+	fh := gitinfo.FileHistories{}
+	gitinfo.ConvertCommitsToHistory(commits, &fh)
 
 	templateDir := path.Join(os.Getenv("GOPATH"), "src/github.com/sosuke-k/hyena/root/templates")
 	templatePath := path.Join(templateDir, "project.html")
@@ -57,7 +63,7 @@ func projectHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if err = tmpl.Execute(w, logStruct); err != nil {
+	if err = tmpl.Execute(w, fh); err != nil {
 		hyenaLogger.Fatalln(err)
 		fmt.Fprintln(os.Stderr, err.Error())
 		http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -176,4 +182,29 @@ func projectShowAPIHandler(w http.ResponseWriter, r *http.Request) {
 
 	hyenaLogger.Println("response write show " + sha)
 	fmt.Fprintln(os.Stdout, "response write show "+sha)
+}
+
+func projectHistoryAPIHandler(w http.ResponseWriter, r *http.Request) {
+	hyenaLogger := logger.GetInstance()
+	methodURL := r.Method + " " + r.URL.String()
+	hyenaLogger.Println(methodURL)
+	fmt.Fprintln(os.Stdout, methodURL)
+
+	params := mux.Vars(r)
+	name := params["name"]
+	projectDir := path.Join(getHyenaPath(), name)
+	shas := gitinfo.GetSHAArray(projectDir)
+	var commits []gitinfo.Commit
+	for _, sha := range shas {
+		commits = append(commits, *gitinfo.NewCommit(git.Show(projectDir, sha)))
+	}
+	fh := gitinfo.FileHistories{}
+	gitinfo.ConvertCommitsToHistory(commits, &fh)
+
+	if err := json.NewEncoder(w).Encode(fh); err != nil {
+		hyenaLogger.Fatalln(err)
+	}
+
+	hyenaLogger.Println("response write history of " + name)
+	fmt.Fprintln(os.Stdout, "response write history of "+name)
 }

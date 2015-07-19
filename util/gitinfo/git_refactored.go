@@ -55,6 +55,31 @@ func NewCommit(commitString string) (commit *Commit) {
 	return
 }
 
+func sortCommit(commits []Commit) []Commit {
+	l := len(commits)
+	p := make([]*Commit, l)
+	for i := range commits {
+		p[i] = &commits[i]
+	}
+
+	for i := 0; i < l-1; i++ {
+		for j := 0; j < l-i-1; j++ {
+			if p[j].Date.After(p[j+1].Date) {
+				tmp := p[j]
+				p[j] = p[j+1]
+				p[j+1] = tmp
+			}
+		}
+	}
+
+	res := make([]Commit, l)
+	for i := range p {
+		res[i] = *p[i]
+	}
+
+	return res
+}
+
 func (c *Commit) unifySameFileDiff() {
 	dic := make(map[string][]Diff)
 	for _, diff := range c.Diffs {
@@ -199,7 +224,7 @@ func extractInfo(diff *Diff, text string) {
 		}
 		if line[0:1] == "+" {
 			diff.A.Sentences = append(diff.A.Sentences, line[1:])
-			diff.A.LineNumbers = append(diff.A.LineNumbers, startA+i)
+			diff.A.LineNumbers = append(diff.A.LineNumbers, startA+i-nDeleted)
 		}
 	}
 }

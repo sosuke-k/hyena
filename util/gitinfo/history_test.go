@@ -1,6 +1,9 @@
 package gitinfo
 
-import "testing"
+import (
+	"fmt"
+	"testing"
+)
 
 import (
 	"github.com/davecgh/go-spew/spew"
@@ -88,7 +91,6 @@ func TestConverter(t *testing.T) {
 		sha := shas[len(shas)-1]
 		commit := *NewCommit(git.Show(projectDir, sha))
 		diff := commit.Diffs[0]
-		// spew.Dump(diff)
 
 		var conv Converter
 		idx := 0
@@ -98,23 +100,28 @@ func TestConverter(t *testing.T) {
 
 		l1 := len(fh)
 		conv.applyD(diff, &fh)
-		// Convey("applyD", func() {
 		So(l1, ShouldNotEqual, len(fh))
-		// })
 
 		l2 := len(fh[diff.A.FileName])
 		conv.applyA(diff, &fh)
-		// Convey("applyA", func() {
 		So(l2, ShouldNotEqual, len(fh[diff.A.FileName]))
-		// })
 
-		// spew.Dump(conv)
-		// spew.Dump(conv.current[diff.A.FileName])
-		// spew.Dump(conv.next["b/acrobat.json"])
+	})
+}
+
+func TestConvertCommitsToHistory(t *testing.T) {
+	Convey("not yet", t, func() {
+		projectDir := "/Users/katososuke/.config/hyena/git_test"
+		shas := GetSHAArray(projectDir)
+		var commits []Commit
+		for _, sha := range shas {
+			commits = append(commits, *NewCommit(git.Show(projectDir, sha)))
+		}
+		fh := FileHistories{}
+		convertCommitsToHistory(commits, &fh)
+		fmt.Println("====spew.Dump(commits)====")
+		spew.Dump(commits)
+		fmt.Println("====spew.Dump(fh)====")
 		spew.Dump(fh)
-		// for k, v := range fh {
-		// 	fmt.Println("key = " + k)
-		// 	fmt.Println(v)
-		// }
 	})
 }

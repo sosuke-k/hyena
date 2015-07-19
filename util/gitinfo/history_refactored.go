@@ -2,6 +2,7 @@ package gitinfo
 
 import (
 	"fmt"
+	"strconv"
 
 	"github.com/sosuke-k/hyena/util/git"
 )
@@ -59,7 +60,7 @@ type Converter struct {
 	next      map[string]Histories
 }
 
-func (c *Converter) init(idx int) {
+func (c *Converter) init() {
 	c.current = make(map[string]Histories)
 	c.next = make(map[string]Histories)
 }
@@ -68,56 +69,59 @@ func (c *Converter) setCommitIdx(idx int) {
 	c.commitIdx = idx
 }
 
-func (c *Converter) apply(diff Diff, histories *FileHistories) {
-
-}
-
-func (c *Converter) applyD(diff Diff, histories *FileHistories) {
+func (c *Converter) applyD(diff Diff, p *FileHistories) {
 	name := diff.D.FileName
+	fh := *p
 	if name == "/dev/null" {
+		fh[diff.A.FileName] = Histories{}
+		p = &fh
 		return
 	}
-	for _, n := range diff.D.LineNumbers {
-		if len(c.current[name]) < n {
-			fmt.Println("n is out of current")
-		}
-		c.current[name][n-1].LineNumberSequence.push(-1)
-	}
+	// for _, n := range diff.D.LineNumbers {
+	// 	if len(c.current[name]) < n {
+	// 		fmt.Println("n is out of current")
+	// 	}
+	// 	c.current[name][n-1].LineNumberSequence.push(-1)
+	// }
 }
 
-func (c *Converter) applyA(diff Diff, histories *FileHistories) {
+func (c *Converter) applyA(diff Diff, p *FileHistories) {
+	fmt.Println("============")
 	name := diff.A.FileName
+	fh := *p
+	c.next[name] = Histories{}
+	addedSum := 0
+	lnIdx := 0
+	fmt.Println("diff.A.Sentences length is " + strconv.Itoa(len(diff.A.Sentences)))
 
-	// diff.A.Sentences ではんく c.current[name] のループをまわすようにする
+	if len(c.current[name]) == 0 {
+		for i, s := range diff.A.Sentences {
+			ln := diff.A.LineNumbers[i]
 
-	if name == diff.D.FileName {
-		// diff[name] の初期化処理
-		return
+			h := fh.append(name, s)
+			h.LineNumberSequence.init(c.commitIdx)
+			h.LineNumberSequence.push(ln)
+			c.next[name] = append(c.next[name], h)
+		}
 	}
 
 	for i := range c.current[name] {
-		ln := i + 1
-		if diff.A.contains(ln) {
+		ln := i + addedSum + 1
+		for diff.A.LineNumbers[lnIdx] == ln {
+			s := diff.A.Sentences[lnIdx]
 
-		} else {
+			h := fh.append(name, s)
+			h.LineNumberSequence.init(c.commitIdx)
+			h.LineNumberSequence.push(ln)
+			c.next[name] = append(c.next[name], h)
 
+			lnIdx++
+			addedSum++
 		}
+		c.next[name] = append(c.next[name], c.current[name][i])
 	}
-
-	// for i, s := range diff.A.Sentences {
-	// 	n := diff.A.LineNumbers[i]
-	//
-	// 	h := histories.append(name, s)
-	// 	h.LineNumberSequence.init(c.commitIdx - 1)
-	// 	h.LineNumberSequence.push(n)
-	//
-	// 	// current1 := current[name][:i]
-	// 	// current2 := c.current[name][i+1:]
-	//
-	// 	c.next[name] = append(c.current[name][:i], h)
-	// 	c.next[name] = append(c.current[name], c.current[name][i+1:]...)
-	// }
-	// c.current[name] = append(c.current[name])
+	fmt.Println("c.next[name] length is " + strconv.Itoa(len(c.next[name])))
+	p = &fh
 }
 
 func convertCommitsToHistory(commits *[]Commit, histories *FileHistories) {
@@ -125,7 +129,8 @@ func convertCommitsToHistory(commits *[]Commit, histories *FileHistories) {
 	var conv Converter
 	for _, commit := range *commits {
 		for _, diff := range commit.Diffs {
-			conv.apply(diff, histories)
+			conv.applyD(diff, histories)
+			conv.applyA(diff, histories)
 		}
 	}
 }

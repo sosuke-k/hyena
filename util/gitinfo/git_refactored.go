@@ -68,7 +68,8 @@ func (c *Commit) unifySameFileDiff() {
 	diffs := []Diff{}
 	for _, sameDiffs := range dic {
 		l := len(sameDiffs)
-		if l <= 1 {
+		if l == 1 {
+			diffs = append(diffs, sameDiffs[0])
 			continue
 		}
 		diff := sameDiffs[0]

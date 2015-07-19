@@ -1,7 +1,9 @@
 package gitinfo
 
 import "testing"
+
 import (
+	"github.com/davecgh/go-spew/spew"
 	. "github.com/smartystreets/goconvey/convey"
 	"github.com/sosuke-k/hyena/util/git"
 )
@@ -65,6 +67,10 @@ func TestFileHistories(t *testing.T) {
 
 func TestConverter(t *testing.T) {
 
+	Convey("init", t, func() {
+		Convey("not yet", nil)
+	})
+
 	Convey("setCommitIdx", t, func() {
 
 		var conv Converter
@@ -76,43 +82,39 @@ func TestConverter(t *testing.T) {
 		})
 	})
 
-	Convey("applyD", t, func() {
+	Convey("apply given first commit diff", t, func() {
 		projectDir := "/Users/katososuke/.config/hyena/git_test"
 		shas := GetSHAArray(projectDir)
 		sha := shas[len(shas)-1]
 		commit := *NewCommit(git.Show(projectDir, sha))
 		diff := commit.Diffs[0]
 		// spew.Dump(diff)
-		Convey(`when deleted file name is "/dev/null"`, func() {
-			var conv Converter
-			idx := 0
-			conv.setCommitIdx(idx)
-			// var fh FileHistories
-			fh := FileHistories{}
-			l := len(fh)
-			conv.applyD(diff, &fh)
-			So(l, ShouldEqual, len(fh))
-		})
-	})
 
-	Convey("applyA", t, func() {
-		projectDir := "/Users/katososuke/.config/hyena/git_test"
-		shas := GetSHAArray(projectDir)
+		var conv Converter
+		idx := 0
+		conv.init()
+		conv.setCommitIdx(idx)
+		fh := FileHistories{}
 
-		Convey("first commit", func() {
-			sha := shas[len(shas)-1]
-			commit := *NewCommit(git.Show(projectDir, sha))
-			diff := commit.Diffs[0]
-			// spew.Dump(diff)
+		l1 := len(fh)
+		conv.applyD(diff, &fh)
+		// Convey("applyD", func() {
+		So(l1, ShouldNotEqual, len(fh))
+		// })
 
-			var conv Converter
-			idx := 0
-			conv.setCommitIdx(idx)
-			// var fh FileHistories
-			fh := FileHistories{}
-			l := len(fh)
-			conv.applyA(diff, &fh)
-			So(l, ShouldEqual, len(fh))
-		})
+		l2 := len(fh[diff.A.FileName])
+		conv.applyA(diff, &fh)
+		// Convey("applyA", func() {
+		So(l2, ShouldNotEqual, len(fh[diff.A.FileName]))
+		// })
+
+		// spew.Dump(conv)
+		// spew.Dump(conv.current[diff.A.FileName])
+		// spew.Dump(conv.next["b/acrobat.json"])
+		spew.Dump(fh)
+		// for k, v := range fh {
+		// 	fmt.Println("key = " + k)
+		// 	fmt.Println(v)
+		// }
 	})
 }

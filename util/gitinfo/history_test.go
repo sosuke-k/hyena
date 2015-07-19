@@ -2,7 +2,6 @@ package gitinfo
 
 import "testing"
 import (
-	"github.com/davecgh/go-spew/spew"
 	. "github.com/smartystreets/goconvey/convey"
 	"github.com/sosuke-k/hyena/util/git"
 )
@@ -104,7 +103,7 @@ func TestConverter(t *testing.T) {
 			sha := shas[len(shas)-1]
 			commit := *NewCommit(git.Show(projectDir, sha))
 			diff := commit.Diffs[0]
-			spew.Dump(diff)
+			// spew.Dump(diff)
 
 			var conv Converter
 			idx := 0

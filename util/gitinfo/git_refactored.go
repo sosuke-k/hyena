@@ -7,6 +7,7 @@ import (
 	"strconv"
 	"time"
 
+	"github.com/bradfitz/iter"
 	"github.com/sosuke-k/hyena/util/git"
 	"github.com/sosuke-k/hyena/util/re"
 )
@@ -46,13 +47,52 @@ func NewCommit(commitString string) (commit *Commit) {
 	commit.Date = extractDate(commitString)
 	commit.Message = extractMessage(commitString)
 	diffs := devideCommit(commitString)
-	// fmt.Println(extractStartAndSum(diffs[0]))
-	// extractInfo(&diffs[0], commitString)
 	for _, diff := range diffs {
 		commit.Diffs = append(commit.Diffs, parseDiff(diff))
 	}
+	commit.unifySameFileDiff()
 	// spew.Dump(commit)
 	return
+}
+
+func (c *Commit) unifySameFileDiff() {
+	dic := make(map[string][]Diff)
+	for _, diff := range c.Diffs {
+		name := diff.A.FileName
+		_, ok := dic[name]
+		if !ok {
+			dic[name] = []Diff{}
+		}
+		dic[name] = append(dic[name], diff)
+	}
+	diffs := []Diff{}
+	for _, sameDiffs := range dic {
+		l := len(sameDiffs)
+		if l <= 1 {
+			continue
+		}
+		diff := sameDiffs[0]
+		for i := range iter.N(l - 1) {
+			diff2 := sameDiffs[i+1]
+			diff.D.LineNumbers = append(diff.D.LineNumbers, diff2.D.LineNumbers...)
+			diff.D.Sentences = append(diff.D.Sentences, diff2.D.Sentences...)
+			diff.A.LineNumbers = append(diff.A.LineNumbers, diff2.A.LineNumbers...)
+			diff.A.Sentences = append(diff.A.Sentences, diff2.A.Sentences...)
+		}
+		diffs = append(diffs, diff)
+	}
+	c.Diffs = diffs
+}
+
+func (d DiffInfo) contains(n int) bool {
+	b := false
+	for _, ln := range d.LineNumbers {
+		if ln == n {
+			b = true
+			break
+		}
+	}
+	return b
 }
 
 func extractSHA(log string) (sha string) {

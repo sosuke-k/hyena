@@ -95,20 +95,29 @@ func (c *Converter) applyA(diff Diff, histories *FileHistories) {
 		return
 	}
 
-	for i, s := range diff.A.Sentences {
-		n := diff.A.LineNumbers[i]
+	for i := range c.current[name] {
+		ln := i + 1
+		if diff.A.contains(ln) {
 
-		h := histories.append(name, s)
-		h.LineNumberSequence.init(c.commitIdx - 1)
-		h.LineNumberSequence.push(n)
+		} else {
 
-		// current1 := current[name][:i]
-		// current2 := c.current[name][i+1:]
-
-		c.next[name] = append(c.current[name][:i], h)
-		c.next[name] = append(c.current[name], c.current[name][i+1:]...)
+		}
 	}
-	c.current[name] = append(c.current[name])
+
+	// for i, s := range diff.A.Sentences {
+	// 	n := diff.A.LineNumbers[i]
+	//
+	// 	h := histories.append(name, s)
+	// 	h.LineNumberSequence.init(c.commitIdx - 1)
+	// 	h.LineNumberSequence.push(n)
+	//
+	// 	// current1 := current[name][:i]
+	// 	// current2 := c.current[name][i+1:]
+	//
+	// 	c.next[name] = append(c.current[name][:i], h)
+	// 	c.next[name] = append(c.current[name], c.current[name][i+1:]...)
+	// }
+	// c.current[name] = append(c.current[name])
 }
 
 func convertCommitsToHistory(commits *[]Commit, histories *FileHistories) {

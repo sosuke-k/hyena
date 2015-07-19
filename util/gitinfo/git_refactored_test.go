@@ -39,3 +39,11 @@ func TestExtractAuthor(t *testing.T) {
 		})
 	})
 }
+
+func TestDiffInfo(t *testing.T) {
+
+	Convey("contains with n", t, func() {
+
+		Convey("How can i write this test", nil)
+	})
+}

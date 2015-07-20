@@ -40,6 +40,7 @@
       border:3px solid #f0f0f0;
       border-radius:20px;
     }
+
   </style>
 
   <template>
@@ -64,42 +65,13 @@
         console.log('git-history-jarallax is ready');
       },
       logResponse: function(e) {
-        // console.log(this);
-        // commits = e.detail.response.commits;
-        // console.log(commits[1].diff.diffs[0]);
-        //
-        // // commits.map( function(commit) {
-        // for(var i = 0; i< commits.length; i++) {
-        //   var commit = commits[i];
-        //   // console.log(commit);
-        //   console.log(commit.sha);
-        //   // commit.diff.diffs.map( function(diff) {
-        //   for(var j = 0; j< commit.diff.diffs.length; j++) {
-        //     var diff = commit.diff.diffs[j];
-        //     // console.log(diff);
-        //     if (diff.after_file == "b/chrome.json") {
-        //       if (diff.before_file == "/dev/null") {
-        //         for (var k = 0; k < diff.add.sentences.length; k++) {
-        //           var div = document.createElement("div");
-        //           var n = diff.add.sentences[k].n;
-        //           var s = diff.add.sentences[k].s;
-        //           div.innerHTML = n + " :" + s;
-        //           this.$.animation.appendChild(div);// this is window not polymer
-        //         }
-        //       } else if (diff.before_file == "a/chrome.json") {
-        //         console.log(diff);
-        //       }
-        //     }
-        //   }
-        //   // });
-        // }
-        // });
-
-        console.log(e.detail.response);
-
-        this.initJarallax();
+        this.initJarallax(e.detail.response["b/chrome.json"]);
       },
-      initJarallax: function() {
+      initJarallax: function(histories) {
+
+        for(var i = 0; i < histories.length; i++) {
+          console.log(histories[i].line_string);
+        }
 
         var keys = {38:-0.01, 40:0.01};
 
@@ -108,6 +80,86 @@
         var wheel_controller = new ControllerMousewheel(0.01, true);
 
         jarallax = new Jarallax([drag_controller, key_controller, wheel_controller]);
+
+        jarallax.setDefault('.line', {opacity:"0"});
+
+        var LINE_HEIGTH = 20;
+
+        for(var i = 0; i < histories.length; i++) {
+          console.log(histories[i]);
+          var line = document.createElement("div");
+          var s = histories[i].line_string;
+          line.id = "chrome" + i;
+          line.className = "line"
+          line.style.position = "absolute"
+          line.style.opacity = "0"
+          line.innerHTML = s;
+          // line.innerHTML = "<paper-button>" + s + "</paper-button>";
+          // console.log(line);
+          this.$.animation.appendChild(line);
+
+          var LNs = histories[i].line_number_sequence
+          var flow = [];
+          flow.push({progress:"0%", left: "0%"})
+          /*
+            [
+              {progress:"5%", display:'inline-block', opacity:"0"},
+              {progress:"15%", display:'inline-block', opacity:"1"},
+              {progress:"25%", display:'inline-block', opacity:"0"},
+              {progress:"30%", display:"none"}
+            ]
+          */
+          
+          var lastLN = -1;
+          for(var j = 0; j < LNs.length; j++) {
+            var LN = LNs[j];
+            if (LN == 0) {
+              LN = lastLN;
+            }
+
+            var deleted = {};
+            var transfered = {};
+            var added = {};
+            var ended = {};
+
+            deleted["progress"] =  ((4 * j + 1) / (4 * LNs.length) * 100).toString() + "%";
+            transfered["progress"] =  ((4 * j + 2) / (4 * LNs.length) * 100).toString() + "%";
+            added["progress"] =  ((4 * j + 3) / (4 * LNs.length) * 100).toString() + "%";
+            ended["progress"] =  ((4 * j + 4) / (4 * LNs.length) * 100).toString() + "%";
+
+            if (LN < 0) {
+              deleted["opacity"] = 0
+            } else {
+              if (lastLN < 0) {
+                deleted["opacity"] = 0;
+                transfered["opacity"] = 0;
+              } else {
+                deleted["opacity"] = 1;
+                transfered["opacity"] = 1;
+              }
+
+              added["opacity"] = 1;
+              ended["opacity"] = 1;
+              deleted["top"] = (lastLN * LINE_HEIGTH).toString() + "px";
+              transfered["top"] = (LN * LINE_HEIGTH).toString() + "px";
+            }
+
+            // console.log(obj);
+            flow.push(deleted);
+            flow.push(transfered);
+            flow.push(added);
+            flow.push(ended);
+            lastLN = LN;
+          }
+
+          // flow = [
+          //   {progress: "20%", display:"block", opacity:"1"},
+          //   {progress: "40%", display:"none", opacity:"0"}
+          // ];
+
+          // console.log(flow);
+          jarallax.addAnimation("#" + line.id, flow);
+        }
       }
     });
   </script>

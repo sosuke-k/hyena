@@ -91,6 +91,11 @@ func (c *Converter) applyD(diff Diff, p *FileHistories) {
 	fmt.Println("A " + diff.A.FileName)
 	name := diff.A.FileName
 
+	if name == "b/chrome.json" {
+		fmt.Println("current[" + name + "] length is " + strconv.Itoa(len(c.current[name])))
+		fmt.Println("D.Sentences length is " + strconv.Itoa(len(diff.D.Sentences)))
+	}
+
 	if diff.D.FileName == "/dev/null" {
 		fh := *p
 		fh[name] = Histories{}
@@ -133,28 +138,36 @@ func (c *Converter) applyA(diff Diff, p *FileHistories) {
 		}
 	}
 
-	fmt.Println("current[" + name + "] length is " + strconv.Itoa(len(c.current[name])))
+	if name == "b/chrome.json" {
+		fmt.Println("current[" + name + "] length is " + strconv.Itoa(len(c.current[name])))
+		fmt.Println("A.Sentences length is " + strconv.Itoa(len(diff.A.Sentences)))
+	}
+
+	addedEndFlag := false
 	for i := range c.current[name] {
-		// fmt.Println("current[" + name + "][" + strconv.Itoa(i) + "]")
+		fmt.Println("current[" + name + "][" + strconv.Itoa(i) + "]")
 		// spew.Dump(c.current[name][i])
 		ln := i + addedSum + 1
-		// fmt.Println("ln = " + strconv.Itoa(ln))
-		// fmt.Println("lnIdx = " + strconv.Itoa(lnIdx))
-		for lnIdx >= len(diff.A.LineNumbers) && diff.A.LineNumbers[lnIdx] == ln {
+		fmt.Println("ln = " + strconv.Itoa(ln))
+		fmt.Println("lnIdx = " + strconv.Itoa(lnIdx))
+		for !addedEndFlag && diff.A.LineNumbers[lnIdx] == ln {
 			s := diff.A.Sentences[lnIdx]
-			// fmt.Println("sentence is " + s)
+			fmt.Println("sentence is " + s)
 
 			h := fh.append(name, s)
 			h.LineNumberSequence.init(c.commitIdx)
 			h.LineNumberSequence.push(ln)
 
-			// fmt.Println("====fh.appended====")
+			fmt.Println("====fh.appended====")
 			c.next[name] = append(c.next[name], h)
 
 			lnIdx++
+			if lnIdx >= len(diff.A.LineNumbers) {
+				addedEndFlag = true
+			}
 			addedSum++
 			ln = i + addedSum + 1
-			// fmt.Println("====lnIdx and addedSum increment====")
+			fmt.Println("====lnIdx and addedSum increment====")
 		}
 		c.current[name][i].LineNumberSequence.push(ln)
 		// fmt.Println("====pushed====")
@@ -177,6 +190,9 @@ func ConvertCommitsToHistory(commits []Commit, histories *FileHistories) {
 				conv.current[k] = conv.next[k]
 			}
 			conv.applyA(diff, histories)
+			for k := range conv.next {
+				conv.current[k] = conv.next[k]
+			}
 		}
 		histories.regulate(i + 1)
 	}

@@ -118,7 +118,7 @@ func TestConvertCommitsToHistory(t *testing.T) {
 			commits = append(commits, *NewCommit(git.Show(projectDir, sha)))
 		}
 		fh := FileHistories{}
-		convertCommitsToHistory(commits, &fh)
+		ConvertCommitsToHistory(commits, &fh)
 		fmt.Println("====spew.Dump(commits)====")
 		spew.Dump(commits)
 		fmt.Println("====spew.Dump(fh)====")

@@ -42,16 +42,16 @@ func projectHandler(w http.ResponseWriter, r *http.Request) {
 	hyenaLogger.Println(methodURL)
 	fmt.Fprintln(os.Stdout, methodURL)
 
-	params := mux.Vars(r)
-	name := params["name"]
-	projectDir := path.Join(getHyenaPath(), name)
-	shas := gitinfo.GetSHAArray(projectDir)
-	var commits []gitinfo.Commit
-	for _, sha := range shas {
-		commits = append(commits, *gitinfo.NewCommit(git.Show(projectDir, sha)))
-	}
-	fh := gitinfo.FileHistories{}
-	gitinfo.ConvertCommitsToHistory(commits, &fh)
+	// params := mux.Vars(r)
+	// name := params["name"]
+	// projectDir := path.Join(getHyenaPath(), name)
+	// shas := gitinfo.GetSHAArray(projectDir)
+	// var commits []gitinfo.Commit
+	// for _, sha := range shas {
+	// 	commits = append(commits, *gitinfo.NewCommit(git.Show(projectDir, sha)))
+	// }
+	// fh := gitinfo.FileHistories{}
+	// gitinfo.ConvertCommitsToHistory(commits, &fh)
 
 	templateDir := path.Join(os.Getenv("GOPATH"), "src/github.com/sosuke-k/hyena/root/templates")
 	templatePath := path.Join(templateDir, "project.html")
@@ -63,7 +63,7 @@ func projectHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if err = tmpl.Execute(w, fh); err != nil {
+	if err = tmpl.Execute(w, nil); err != nil {
 		hyenaLogger.Fatalln(err)
 		fmt.Fprintln(os.Stderr, err.Error())
 		http.Error(w, err.Error(), http.StatusInternalServerError)

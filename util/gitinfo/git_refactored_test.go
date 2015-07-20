@@ -107,3 +107,11 @@ func TestSortCommit(t *testing.T) {
 		// spew.Dump(commits)
 	})
 }
+
+func TestGetSHAArray(t *testing.T) {
+	Convey("given lab project directroy", t, func() {
+		projectDir := "/Users/katososuke/.config/hyena/lab"
+		shas := GetSHAArray(projectDir)
+		So(len(shas), ShouldEqual, 1)
+	})
+}

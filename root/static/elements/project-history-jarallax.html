@@ -45,7 +45,7 @@
 
   <template>
     </iron-ajax>
-    <iron-ajax auto url="/api/project/git_test/history" handle-as="json" on-response="logResponse">
+    <iron-ajax auto url="/api/project/lab/history" handle-as="json" on-response="logResponse">
     </iron-ajax>
 
     <div id="animation">
@@ -65,6 +65,7 @@
         console.log('git-history-jarallax is ready');
       },
       logResponse: function(e) {
+        console.log(e.detail.response);
         this.initJarallax(e.detail.response["b/chrome.json"]);
       },
       initJarallax: function(histories) {
@@ -109,7 +110,6 @@
               {progress:"30%", display:"none"}
             ]
           */
-          
           var lastLN = -1;
           for(var j = 0; j < LNs.length; j++) {
             var LN = LNs[j];

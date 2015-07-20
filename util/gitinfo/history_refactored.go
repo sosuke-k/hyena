@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"strconv"
 
+	"github.com/davecgh/go-spew/spew"
 	"github.com/sosuke-k/hyena/util/git"
 )
 
@@ -91,10 +92,10 @@ func (c *Converter) applyD(diff Diff, p *FileHistories) {
 	fmt.Println("A " + diff.A.FileName)
 	name := diff.A.FileName
 
-	if name == "b/chrome.json" {
-		fmt.Println("current[" + name + "] length is " + strconv.Itoa(len(c.current[name])))
-		fmt.Println("D.Sentences length is " + strconv.Itoa(len(diff.D.Sentences)))
-	}
+	// if name == "b/chrome.json" {
+	// 	fmt.Println("current[" + name + "] length is " + strconv.Itoa(len(c.current[name])))
+	// 	fmt.Println("D.Sentences length is " + strconv.Itoa(len(diff.D.Sentences)))
+	// }
 
 	if diff.D.FileName == "/dev/null" {
 		fh := *p
@@ -138,18 +139,27 @@ func (c *Converter) applyA(diff Diff, p *FileHistories) {
 		}
 	}
 
-	if name == "b/chrome.json" {
-		fmt.Println("current[" + name + "] length is " + strconv.Itoa(len(c.current[name])))
-		fmt.Println("A.Sentences length is " + strconv.Itoa(len(diff.A.Sentences)))
-	}
+	// if name == "b/chrome.json" {
+	// 	fmt.Println("current[" + name + "] length is " + strconv.Itoa(len(c.current[name])))
+	// 	fmt.Println("A.Sentences length is " + strconv.Itoa(len(diff.A.Sentences)))
+	// }
 
 	addedEndFlag := false
 	for i := range c.current[name] {
 		fmt.Println("current[" + name + "][" + strconv.Itoa(i) + "]")
-		// spew.Dump(c.current[name][i])
+		spew.Dump(c.current[name][i])
 		ln := i + addedSum + 1
 		fmt.Println("ln = " + strconv.Itoa(ln))
 		fmt.Println("lnIdx = " + strconv.Itoa(lnIdx))
+		fmt.Println("A.LineNumbers length is " + strconv.Itoa(len(diff.A.LineNumbers)))
+		if addedEndFlag {
+			fmt.Println("addedEndFlag = true")
+		} else {
+			fmt.Println("addedEndFlag = false")
+		}
+		if len(diff.A.LineNumbers) == 0 {
+			addedEndFlag = true
+		}
 		for !addedEndFlag && diff.A.LineNumbers[lnIdx] == ln {
 			s := diff.A.Sentences[lnIdx]
 			fmt.Println("sentence is " + s)
@@ -178,7 +188,7 @@ func (c *Converter) applyA(diff Diff, p *FileHistories) {
 
 // ConvertCommitsToHistory func
 func ConvertCommitsToHistory(commits []Commit, histories *FileHistories) {
-	fmt.Println("====convertCommitsToHistory====")
+	fmt.Println("====begin convertCommitsToHistory====")
 	var conv Converter
 	conv.init()
 	commits = sortCommit(commits)
@@ -196,6 +206,7 @@ func ConvertCommitsToHistory(commits []Commit, histories *FileHistories) {
 		}
 		histories.regulate(i + 1)
 	}
+	fmt.Println("====finish convertCommitsToHistory====")
 }
 
 // Hoge func

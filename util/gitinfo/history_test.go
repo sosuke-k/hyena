@@ -111,7 +111,7 @@ func TestConverter(t *testing.T) {
 
 func TestConvertCommitsToHistory(t *testing.T) {
 	Convey("not yet", t, func() {
-		projectDir := "/Users/katososuke/.config/hyena/git_test"
+		projectDir := "/Users/katososuke/.config/hyena/init_test"
 		shas := GetSHAArray(projectDir)
 		var commits []Commit
 		for _, sha := range shas {

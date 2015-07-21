@@ -143,12 +143,8 @@ func (c *Converter) applyA(diff Diff, p *FileHistories) {
 }
 
 func (c *Converter) update(name string) {
-	// for k := range conv.next {
-	// 	conv.current[k] = conv.next[k]
-	// }
 	c.current[name] = make([]*History, len(c.next[name]))
 	copy(c.current[name], c.next[name])
-	// conv.current = append([]T(nil), a...)
 }
 
 // ConvertCommitsToHistory func

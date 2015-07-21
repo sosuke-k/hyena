@@ -75,14 +75,9 @@
         }
       },
       logResponse: function(e) {
-        // console.log(e.detail.response);
         this.initJarallax(e.detail.response["b/chrome.json"]);
       },
       initJarallax: function(histories) {
-
-        // for(var i = 0; i < histories.length; i++) {
-        //   console.log(histories[i].line_string);
-        // }
 
         var keys = {38:-0.01, 40:0.01};
 
@@ -97,7 +92,6 @@
         var LINE_HEIGTH = 20;
 
         for(var i = 0; i < histories.length; i++) {
-          // console.log(histories[i]);
           var line = document.createElement("div");
           var s = histories[i].line_string;
           line.id = "chrome" + i;
@@ -106,7 +100,6 @@
           line.style.opacity = "0"
           line.innerHTML = s;
           // line.innerHTML = "<paper-button>" + s + "</paper-button>";
-          // console.log(line);
           this.$.animation.appendChild(line);
 
           var LNs = histories[i].line_number_sequence
@@ -154,7 +147,6 @@
               transfered["top"] = (LN * LINE_HEIGTH).toString() + "px";
             }
 
-            // console.log(obj);
             flow.push(deleted);
             flow.push(transfered);
             flow.push(added);
@@ -162,12 +154,6 @@
             lastLN = LN;
           }
 
-          // flow = [
-          //   {progress: "20%", display:"block", opacity:"1"},
-          //   {progress: "40%", display:"none", opacity:"0"}
-          // ];
-
-          // console.log(flow);
           jarallax.addAnimation("#" + line.id, flow);
         }
       }

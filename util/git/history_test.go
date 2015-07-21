@@ -2,6 +2,8 @@ package gyena
 
 import (
 	"fmt"
+	"os"
+	"path"
 	"testing"
 )
 
@@ -85,7 +87,8 @@ func TestConverter(t *testing.T) {
 	})
 
 	Convey("apply given first commit diff", t, func() {
-		projectDir := "/Users/katososuke/.config/hyena/git_test"
+
+		projectDir := path.Join(os.Getenv("GOPATH"), "src/github.com/sosuke-k/hyena/util/git/test_repository")
 		rep := Repository{Dir: projectDir}
 		shas := rep.GetSHAArray()
 		sha := shas[len(shas)-1]
@@ -111,7 +114,7 @@ func TestConverter(t *testing.T) {
 
 func TestConvertCommitsToHistory(t *testing.T) {
 	Convey("not yet", t, func() {
-		projectDir := "/Users/katososuke/.config/hyena/init_test"
+		projectDir := path.Join(os.Getenv("GOPATH"), "src/github.com/sosuke-k/hyena/util/git/test_repository")
 		rep := Repository{Dir: projectDir}
 		shas := rep.GetSHAArray()
 		var commits []Commit

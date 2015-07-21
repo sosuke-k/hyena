@@ -2,6 +2,8 @@ package gyena
 
 import (
 	"fmt"
+	"os"
+	"path"
 	"strconv"
 	"testing"
 	"time"
@@ -49,7 +51,7 @@ func TestDiffInfo(t *testing.T) {
 func TestSortCommit(t *testing.T) {
 
 	Convey("given git_test commit", t, func() {
-		projectDir := "/Users/katososuke/.config/hyena/git_test"
+		projectDir := path.Join(os.Getenv("GOPATH"), "src/github.com/sosuke-k/hyena/util/git/test_repository")
 		rep := Repository{Dir: projectDir}
 		shas := rep.GetSHAArray()
 		var commits []Commit
@@ -70,9 +72,9 @@ func TestSortCommit(t *testing.T) {
 
 func TestGetSHAArray(t *testing.T) {
 	Convey("given lab project directroy", t, func() {
-		projectDir := "/Users/katososuke/.config/hyena/lab"
+		projectDir := path.Join(os.Getenv("GOPATH"), "src/github.com/sosuke-k/hyena/util/git/test_repository")
 		rep := Repository{Dir: projectDir}
 		shas := rep.GetSHAArray()
-		So(len(shas), ShouldEqual, 1)
+		So(len(shas), ShouldEqual, 4)
 	})
 }

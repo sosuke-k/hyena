@@ -11,7 +11,6 @@ import (
 	"github.com/bitly/go-simplejson"
 	"github.com/gorilla/mux"
 	"github.com/sosuke-k/hyena/util/git"
-	"github.com/sosuke-k/hyena/util/gitinfo"
 	"github.com/sosuke-k/hyena/util/log"
 	"github.com/sosuke-k/hyena/util/pm"
 )
@@ -129,59 +128,14 @@ func projectDiffAPIHandler(w http.ResponseWriter, r *http.Request) {
 	newCommit := params["newCommit"]
 	oldCommit := params["oldCommit"]
 	projectDir := path.Join(getHyenaPath(), name)
-	diffString := git.Diff(projectDir, oldCommit, newCommit)
+	rep := gyena.Repository{Dir: projectDir}
+	diffString := rep.Diff(oldCommit, newCommit)
 
 	if diffString == "" {
 		diffString = "this project is not initialized or these commit not exist"
 	}
 
 	w.Write([]byte(diffString))
-}
-
-func projectLogAPIHandler(w http.ResponseWriter, r *http.Request) {
-	hyenaLogger := logger.GetInstance()
-	methodURL := r.Method + " " + r.URL.String()
-	hyenaLogger.Println(methodURL)
-	fmt.Fprintln(os.Stdout, methodURL)
-
-	params := mux.Vars(r)
-	name := params["name"]
-
-	projectDir := path.Join(getHyenaPath(), name)
-	log := git.ParseLog(git.Log(projectDir))
-
-	for i, commit := range log.Commits {
-		log.Commits[i].Diff = git.ParseCommitDiff(git.Show(projectDir, commit.SHA))
-	}
-
-	if err := json.NewEncoder(w).Encode(log); err != nil {
-		hyenaLogger.Fatalln(err)
-	}
-
-	hyenaLogger.Println("response write log")
-	fmt.Fprintln(os.Stdout, "response write log")
-}
-
-func projectShowAPIHandler(w http.ResponseWriter, r *http.Request) {
-	hyenaLogger := logger.GetInstance()
-	methodURL := r.Method + " " + r.URL.String()
-	hyenaLogger.Println(methodURL)
-	fmt.Fprintln(os.Stdout, methodURL)
-
-	params := mux.Vars(r)
-	name := params["name"]
-	sha := params["sha"]
-
-	projectDir := path.Join(getHyenaPath(), name)
-
-	diff := git.ParseCommitDiff(git.Show(projectDir, sha))
-
-	if err := json.NewEncoder(w).Encode(diff); err != nil {
-		hyenaLogger.Fatalln(err)
-	}
-
-	hyenaLogger.Println("response write show " + sha)
-	fmt.Fprintln(os.Stdout, "response write show "+sha)
 }
 
 func projectHistoryAPIHandler(w http.ResponseWriter, r *http.Request) {
@@ -193,13 +147,14 @@ func projectHistoryAPIHandler(w http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
 	name := params["name"]
 	projectDir := path.Join(getHyenaPath(), name)
-	shas := gitinfo.GetSHAArray(projectDir)
-	var commits []gitinfo.Commit
+	rep := gyena.Repository{Dir: projectDir}
+	shas := rep.GetSHAArray()
+	var commits []gyena.Commit
 	for _, sha := range shas {
-		commits = append(commits, *gitinfo.NewCommit(git.Show(projectDir, sha)))
+		commits = append(commits, *gyena.NewCommit(rep.Show(sha)))
 	}
-	fh := gitinfo.FileHistories{}
-	gitinfo.ConvertCommitsToHistory(commits, &fh)
+	fh := gyena.FileHistories{}
+	gyena.ConvertCommitsToHistory(commits, &fh)
 
 	if err := json.NewEncoder(w).Encode(fh); err != nil {
 		hyenaLogger.Fatalln(err)

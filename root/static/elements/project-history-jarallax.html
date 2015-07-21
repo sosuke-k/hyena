@@ -45,7 +45,7 @@
 
   <template>
     </iron-ajax>
-    <iron-ajax auto url="/api/project/init_test/history" handle-as="json" on-response="logResponse">
+    <iron-ajax id="historyAjax" handle-as="json" on-response="logResponse">
     </iron-ajax>
 
     <div id="animation">
@@ -63,16 +63,26 @@
       ready: function() {
         this.diffs = [];
         console.log('git-history-jarallax is ready');
+        var re = /\/project\/([0-9a-zA-Z_.-]*)/;
+        var match = location.pathname.match(re);
+        if (match != null && match[1] != "") {
+          var url = "/api/project/" + match[1] + "/history"
+          console.log("get " + url);
+          this.$.historyAjax.url = url;
+          this.$.historyAjax.generateRequest();
+        } else {
+          console.log("not match project name");
+        }
       },
       logResponse: function(e) {
-        console.log(e.detail.response);
+        // console.log(e.detail.response);
         this.initJarallax(e.detail.response["b/chrome.json"]);
       },
       initJarallax: function(histories) {
 
-        for(var i = 0; i < histories.length; i++) {
-          console.log(histories[i].line_string);
-        }
+        // for(var i = 0; i < histories.length; i++) {
+        //   console.log(histories[i].line_string);
+        // }
 
         var keys = {38:-0.01, 40:0.01};
 
@@ -87,7 +97,7 @@
         var LINE_HEIGTH = 20;
 
         for(var i = 0; i < histories.length; i++) {
-          console.log(histories[i]);
+          // console.log(histories[i]);
           var line = document.createElement("div");
           var s = histories[i].line_string;
           line.id = "chrome" + i;

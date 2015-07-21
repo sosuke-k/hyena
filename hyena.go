@@ -109,7 +109,9 @@ func hyenaExecWithProject(c *cli.Context) {
 
 func hyenaAdd(name string) {
 	pm.Add(configPath, name)
-	git.Init(path.Join(hyenaPath, name))
+	projectDir := path.Join(hyenaPath, name)
+	rep := gyena.Repository{Dir: projectDir}
+	rep.Init()
 	println("created new project named " + name)
 }
 
@@ -125,7 +127,8 @@ func hyenaSave(projectName string) {
 	kobito.Save(path.Join(projectPath, "kobito.json"))
 	atom.Save(path.Join(projectPath, "atom.json"))
 	preview.Save(path.Join(projectPath, "preview.json"))
-	git.Commit(projectPath, "hyena save "+projectName, false)
+	rep := gyena.Repository{Dir: projectPath}
+	rep.Commit("hyena save "+projectName, false)
 }
 
 func hyenaRestore(projectName string) {
@@ -135,7 +138,8 @@ func hyenaRestore(projectName string) {
 	kobito.Restore(path.Join(projectPath, "kobito.json"))
 	atom.Restore(path.Join(projectPath, "atom.json"))
 	preview.Restore(path.Join(projectPath, "preview.json"))
-	git.Commit(projectPath, "hyena restore "+projectName, true)
+	rep := gyena.Repository{Dir: projectPath}
+	rep.Commit("hyena restore "+projectName, true)
 }
 
 func hyenaBrowser(c *cli.Context) {

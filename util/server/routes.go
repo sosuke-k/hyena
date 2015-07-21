@@ -63,18 +63,6 @@ var routes = Routes{
 		projectDiffAPIHandler,
 	},
 	Route{
-		"ProjectLogAPI",
-		"GET",
-		"/api/project/{name}/log",
-		projectLogAPIHandler,
-	},
-	Route{
-		"ProjectShowAPI",
-		"GET",
-		"/api/project/{name}/show/{sha}",
-		projectShowAPIHandler,
-	},
-	Route{
 		"ProjectHistoryAPI",
 		"GET",
 		"/api/project/{name}/history",

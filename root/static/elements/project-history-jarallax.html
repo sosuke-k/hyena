@@ -1,0 +1,163 @@
+<script src="/static/javascripts/jquery.js"></script>
+<script src="/static/javascripts/jquery-ui.js"></script>
+<script src="/static/javascripts/jquery.mousewheel.min.js"></script>
+<script src="/static/javascripts/jarallax-0.2.4b.js"></script>
+
+<link rel="import" href="/static/bower_components/polymer/polymer.html">
+<link rel="import" href="/static/bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="/static/bower_components/paper-button/paper-button.html">
+
+<dom-module id="project-history-jarallax">
+  <style>
+    :host {
+      display: block;
+    }
+    #button{
+      position:relative;
+      display:block;
+      text-indent:100px;
+      width:20px;
+      height:20px;
+      border:5px solid #243651;
+      border-radius:100px;
+      overflow:hidden;
+      background:white;
+      margin-top:-18px;
+      box-shadow:1px 1px 2px rgba(0,0,0,0.3);
+    }
+
+    #scrollbar{
+      width:100%;
+      background:#243651;
+      height:5px;
+      border-radius:10px;
+      margin-top:20px;
+    }
+
+    #animation{
+      height:600px;
+      overflow:hidden;
+      border:3px solid #f0f0f0;
+      border-radius:20px;
+    }
+
+  </style>
+
+  <template>
+    </iron-ajax>
+    <iron-ajax id="historyAjax" handle-as="json" on-response="logResponse">
+    </iron-ajax>
+
+    <div id="animation">
+    </div>
+    <div id="scrollbar">
+    </div>
+    <div id="button" href="#">
+      ScrollButton
+    </div>
+  </template>
+
+  <script>
+    Polymer({
+      is: "project-history-jarallax",
+      ready: function() {
+        this.diffs = [];
+        console.log('git-history-jarallax is ready');
+        var re = /\/project\/([0-9a-zA-Z_.-]*)/;
+        var match = location.pathname.match(re);
+        if (match != null && match[1] != "") {
+          var url = "/api/project/" + match[1] + "/history"
+          console.log("get " + url);
+          this.$.historyAjax.url = url;
+          this.$.historyAjax.generateRequest();
+        } else {
+          console.log("not match project name");
+        }
+      },
+      logResponse: function(e) {
+        this.initJarallax(e.detail.response["b/chrome.json"]);
+      },
+      initJarallax: function(histories) {
+
+        var keys = {38:-0.01, 40:0.01};
+
+        var drag_controller = new ControllerDrag('#button',100,200);
+        var key_controller = new ControllerKeyboard(keys, true, true);
+        var wheel_controller = new ControllerMousewheel(0.01, true);
+
+        jarallax = new Jarallax([drag_controller, key_controller, wheel_controller]);
+
+        jarallax.setDefault('.line', {opacity:"0"});
+
+        var LINE_HEIGTH = 20;
+
+        for(var i = 0; i < histories.length; i++) {
+          var line = document.createElement("div");
+          var s = histories[i].line_string;
+          line.id = "chrome" + i;
+          line.className = "line"
+          line.style.position = "absolute"
+          line.style.opacity = "0"
+          line.innerHTML = s;
+          // line.innerHTML = "<paper-button>" + s + "</paper-button>";
+          this.$.animation.appendChild(line);
+
+          var LNs = histories[i].line_number_sequence
+          var flow = [];
+          flow.push({progress:"0%", left: "0%"})
+          /*
+            [
+              {progress:"5%", display:'inline-block', opacity:"0"},
+              {progress:"15%", display:'inline-block', opacity:"1"},
+              {progress:"25%", display:'inline-block', opacity:"0"},
+              {progress:"30%", display:"none"}
+            ]
+          */
+          var lastLN = -1;
+          for(var j = 0; j < LNs.length; j++) {
+            var LN = LNs[j];
+            if (LN == 0) {
+              LN = lastLN;
+            }
+
+            var deleted = {};
+            var transfered = {};
+            var added = {};
+            var ended = {};
+
+            deleted["progress"] =  ((4 * j + 1) / (4 * LNs.length) * 100).toString() + "%";
+            transfered["progress"] =  ((4 * j + 2) / (4 * LNs.length) * 100).toString() + "%";
+            added["progress"] =  ((4 * j + 3) / (4 * LNs.length) * 100).toString() + "%";
+            ended["progress"] =  ((4 * j + 4) / (4 * LNs.length) * 100).toString() + "%";
+
+            if (LN < 0) {
+              deleted["opacity"] = 0
+            } else {
+              if (lastLN < 0) {
+                deleted["opacity"] = 0;
+                transfered["opacity"] = 0;
+              } else {
+                deleted["opacity"] = 1;
+                transfered["opacity"] = 1;
+              }
+
+              added["opacity"] = 1;
+              ended["opacity"] = 1;
+              deleted["top"] = (lastLN * LINE_HEIGTH).toString() + "px";
+              transfered["top"] = (LN * LINE_HEIGTH).toString() + "px";
+            }
+
+            flow.push(deleted);
+            flow.push(transfered);
+            flow.push(added);
+            flow.push(ended);
+            lastLN = LN;
+          }
+
+          jarallax.addAnimation("#" + line.id, flow);
+        }
+      }
+    });
+  </script>
+
+</dom-module>

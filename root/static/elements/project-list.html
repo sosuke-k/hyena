@@ -31,19 +31,19 @@
     :host {
       display: block;
     }
-    
+
     paper-item {
       margin: 10px;
     }
-    
+
     paper-button {
       margin: 0 30px;
     }
-    
+
     paper-icon-button {
       margin: 0 5px;
     }
-    
+
     paper-checkbox {
       margin: 0 15px;
     }
@@ -52,7 +52,7 @@
   <template>
     <iron-ajax auto url="/api/projects" handle-as="json" on-response="handleResponse">
     </iron-ajax>
-    <iron-ajax id="deleteAjax" method="POST" url="/api/project/delete/add_api_test" handle-as="json" on-response="deleteButtonResponse">
+    <iron-ajax id="deleteAjax" method="POST" url="/api/project/delete" handle-as="json" on-response="deleteButtonResponse">
     </iron-ajax>
     <paper-item>
       <paper-icon-button icon="delete" on-tap="pushDeleteButton"></paper-icon-button>

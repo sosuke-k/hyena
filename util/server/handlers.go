@@ -36,18 +36,29 @@ func homeHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func projectHandler(w http.ResponseWriter, r *http.Request) {
-	params := mux.Vars(r)
-	name := params["name"]
+	hyenaLogger := logger.GetInstance()
+	methodURL := r.Method + " " + r.URL.String()
+	hyenaLogger.Println(methodURL)
+	fmt.Fprintln(os.Stdout, methodURL)
 
-	projectDir := path.Join(getHyenaPath(), name)
-	fmt.Println(projectDir)
-	logString := git.Log(projectDir)
-
-	if logString == "" {
-		logString = "this project is not initialized"
+	templateDir := path.Join(os.Getenv("GOPATH"), "src/github.com/sosuke-k/hyena/root/templates")
+	templatePath := path.Join(templateDir, "project.html")
+	tmpl, err := template.ParseFiles(templatePath)
+	if err != nil {
+		hyenaLogger.Fatalln(err)
+		fmt.Fprintln(os.Stderr, err.Error())
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
 	}
 
-	w.Write([]byte(logString))
+	if err = tmpl.Execute(w, nil); err != nil {
+		hyenaLogger.Fatalln(err)
+		fmt.Fprintln(os.Stderr, err.Error())
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	hyenaLogger.Println("response wrote")
+	fmt.Fprintln(os.Stdout, "response wrote")
 }
 
 func projectListAPIHandler(w http.ResponseWriter, r *http.Request) {
@@ -106,11 +117,38 @@ func projectDiffAPIHandler(w http.ResponseWriter, r *http.Request) {
 	newCommit := params["newCommit"]
 	oldCommit := params["oldCommit"]
 	projectDir := path.Join(getHyenaPath(), name)
-	diffString := git.Diff(projectDir, oldCommit, newCommit)
+	rep := gyena.Repository{Dir: projectDir}
+	diffString := rep.Diff(oldCommit, newCommit)
 
 	if diffString == "" {
 		diffString = "this project is not initialized or these commit not exist"
 	}
 
 	w.Write([]byte(diffString))
+}
+
+func projectHistoryAPIHandler(w http.ResponseWriter, r *http.Request) {
+	hyenaLogger := logger.GetInstance()
+	methodURL := r.Method + " " + r.URL.String()
+	hyenaLogger.Println(methodURL)
+	fmt.Fprintln(os.Stdout, methodURL)
+
+	params := mux.Vars(r)
+	name := params["name"]
+	projectDir := path.Join(getHyenaPath(), name)
+	rep := gyena.Repository{Dir: projectDir}
+	shas := rep.GetSHAArray()
+	var commits []gyena.Commit
+	for _, sha := range shas {
+		commits = append(commits, *gyena.NewCommit(rep.Show(sha)))
+	}
+	fh := gyena.FileHistories{}
+	gyena.ConvertCommitsToHistory(commits, &fh)
+
+	if err := json.NewEncoder(w).Encode(fh); err != nil {
+		hyenaLogger.Fatalln(err)
+	}
+
+	hyenaLogger.Println("response write history of " + name)
+	fmt.Fprintln(os.Stdout, "response write history of "+name)
 }

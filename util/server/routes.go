@@ -53,7 +53,7 @@ var routes = Routes{
 	Route{
 		"ProjectDeleteAPI",
 		"POST",
-		"/api/project/delete/{name}",
+		"/api/project/delete",
 		projectDeleteAPIHandler,
 	},
 	Route{
@@ -61,5 +61,11 @@ var routes = Routes{
 		"GET",
 		"/api/project/{name}/diff/{oldCommit}/{newCommit}",
 		projectDiffAPIHandler,
+	},
+	Route{
+		"ProjectHistoryAPI",
+		"GET",
+		"/api/project/{name}/history",
+		projectHistoryAPIHandler,
 	},
 }

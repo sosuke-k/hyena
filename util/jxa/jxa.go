@@ -43,7 +43,7 @@ func Compile() {
 	}
 	libPath := path.Join(libDir, "fileIO.scpt") //i.e. "~/Library/Script Libraries/jsonIO.scpt"
 	srcDir := path.Join(os.Getenv("GOPATH"), "src/github.com/sosuke-k/hyena/util/jxa")
-	fileName := "util/jxa/fileIO.js"
+	fileName := "fileIO.js"
 	shCmd := "osacompile"
 	args := []string{"-l", "JavaScript", "-o", libPath, fileName}
 

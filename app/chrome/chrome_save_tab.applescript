@@ -1,5 +1,7 @@
 #!/usr/bin/env osascript -l JavaScript
 
+ObjC.import('stdlib');
+
 function chrome_get_tab_info() {
     app = Application('com.google.Chrome');
     windows = app.windows();
@@ -18,7 +20,6 @@ function chrome_get_tab_info() {
 
 
 function run(argv) {
-    fileIO = Library('fileIO');
     var data = chrome_get_tab_info();
-    fileIO.write(argv, data);
+    $.system("echo '" + data + "'");
 }
